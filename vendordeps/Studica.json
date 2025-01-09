@@ -1,54 +1,49 @@
 {
-    "fileName": "Studica-2025.1.1-beta-3.json",
+    "fileName": "Studica.json",
     "name": "Studica",
-    "version": "2025.1.1-beta-3",
-    "uuid": "cb311d09-36e9-4143-a032-55bb2b94443b",
-    "frcYear": "2025",
+    "version": "1.1.28",
+    "uuid": "e7331fe2-cfaf-4728-878f-03e918da42c5",
     "mavenUrls": [
-        "https://dev.studica.com/maven/release/2025/"
+        "https://dev.studica.com/maven/release/"
     ],
-    "jsonUrl": "https://dev.studica.com/releases/2025/Studica-2025.1.1-beta-3.json",
+    "jsonUrl": "https://dev.studica.com/releases/2020/Studica.json",
     "cppDependencies": [
         {
             "artifactId": "Studica-cpp",
             "binaryPlatforms": [
+                "windowsx86-64",
+                "windowsx86",
                 "linuxathena",
-                "linuxarm32",
-                "linuxarm64",
-                "linuxx86-64",
-                "osxuniversal",
-                "windowsx86-64"
+                "linuxraspbian"
             ],
             "groupId": "com.studica.frc",
             "headerClassifier": "headers",
             "libName": "Studica",
             "sharedLibrary": false,
             "skipInvalidPlatforms": true,
-            "version": "2025.1.1-beta-3"
+            "version": "1.1.28"
         },
         {
             "artifactId": "Studica-driver",
             "binaryPlatforms": [
+                "windowsx86-64",
+                "windowsx86",
                 "linuxathena",
-                "linuxarm32",
-                "linuxarm64",
-                "linuxx86-64",
-                "osxuniversal",
-                "windowsx86-64"
+                "linuxraspbian"
             ],
             "groupId": "com.studica.frc",
             "headerClassifier": "headers",
             "libName": "StudicaDriver",
             "sharedLibrary": false,
             "skipInvalidPlatforms": true,
-            "version": "2025.1.1-beta-3"
+            "version": "1.1.28"
         }
     ],
     "javaDependencies": [
         {
             "artifactId": "Studica-java",
             "groupId": "com.studica.frc",
-            "version": "2025.1.1-beta-3"
+            "version": "1.1.28"
         }
     ],
     "jniDependencies": [
@@ -58,14 +53,12 @@
             "isJar": false,
             "skipInvalidPlatforms": true,
             "validPlatforms": [
+                "windowsx86-64",
+                "windowsx86",
                 "linuxathena",
-                "linuxarm32",
-                "linuxarm64",
-                "linuxx86-64",
-                "osxuniversal",
-                "windowsx86-64"
+                "linuxraspbian"
             ],
-            "version": "2025.1.1-beta-3"
+            "version": "1.1.28"
         }
     ]
 }
