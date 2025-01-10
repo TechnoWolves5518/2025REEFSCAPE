@@ -158,7 +158,7 @@ public class SwerveDriveConfiguration
   {
     if (imu instanceof Pigeon2Swerve)
     {
-      return GyroSimulation.Pigeon2Swerve;
+      return GyroSimulation.getPigeon2X();
     } else if (imu instanceof NavXSwerve)
     {
       return GyroSimulation.getNav2X();
