@@ -1,0 +1,9 @@
+[
+  {
+    "type": "java",
+    "name": "frcJava",
+    "port": 8349,
+    "target": "169.254.12.68",
+    "project": "YAGSL-Example-main"
+  }
+]

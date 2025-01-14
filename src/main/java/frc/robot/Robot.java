@@ -68,5 +68,19 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {}
 
   @Override
+<<<<<<< Updated upstream
   public void testExit() {}
+=======
+  public void simulationInit()
+  {
+  }
+
+  /**
+   * This function is called periodically whilst in simulation.
+   */
+  @Override
+  public void simulationPeriodic()
+  {
+  }
+>>>>>>> Stashed changes
 }
