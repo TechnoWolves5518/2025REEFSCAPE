@@ -4,11 +4,21 @@
 
 package frc.robot.subsystems.swervedrive;
 
+import com.playingwithfusion.CANVenom;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import frc.robot.Constants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
-  public Climber() {}
+  static CANVenom climber;
+  public Climber() {
+    climber = new CANVenom(Constants.CLIMBER, MotorType.kBrushed);
+  }
+
+  public void climb(double speed) {
+    climber.set(speed);
+  }
 
   @Override
   public void periodic() {

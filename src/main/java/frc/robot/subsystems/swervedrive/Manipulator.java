@@ -4,11 +4,22 @@
 
 package frc.robot.subsystems.swervedrive;
 
+import com.playingwithfusion.CANVenom;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Manipulator extends SubsystemBase {
   /** Creates a new Manipulator. */
-  public Manipulator() {}
+  static CANVenom manipulator;
+  public Manipulator() {
+    manipulator = new CANVenom(Constants.MANIPULATOR, MotorType.kBrushed);
+  }
+
+  public void manipulate(double speed) {
+    manipulator.set(speed);
+  }
 
   @Override
   public void periodic() {
