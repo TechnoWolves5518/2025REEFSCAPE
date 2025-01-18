@@ -4,10 +4,11 @@
 
 package frc.robot.autos;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.Manipulator;
 
@@ -17,9 +18,8 @@ public class AutoSelector {
 
 
       public AutoSelector(SwerveSubsystem swerve, Manipulator manipulator){
-            chooser.setDefaultOption("Default(Oneshot)");
+            chooser.setDefaultOption("Default(Oneshot)", new PathPlannerAuto("New Auto"));
 
-            chooser.addOption("Two Shot");
             SmartDashboard.putData(chooser);
       }
       public Command getSelected(){
