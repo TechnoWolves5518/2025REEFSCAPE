@@ -15,6 +15,9 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 import swervelib.SwerveInputStream;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Manipulator;
+import frc.robot.autos.AutoSelector;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -24,6 +27,9 @@ import swervelib.SwerveInputStream;
 public class RobotContainer
 {
 
+  private final Climber climb = new Climber();
+  private final Manipulator manipulate = new Manipulator();
+  private final AutoSelector autoSelector;
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final         CommandXboxController driverXbox = new CommandXboxController(0);
   // The robot's subsystems and commands are defined here...
@@ -140,7 +146,7 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand("New Auto");
+    return autoSelector.getSelected();
   }
 
   public void setDriveMode()
