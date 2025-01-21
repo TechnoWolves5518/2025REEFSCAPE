@@ -5,6 +5,10 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,6 +22,8 @@ import swervelib.SwerveInputStream;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Manipulator;
 import frc.robot.autos.AutoSelector;
+import frc.robot.subsystems.Encode;
+import frc.robot.commands.Read;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -26,14 +32,14 @@ import frc.robot.autos.AutoSelector;
  */
 public class RobotContainer
 {
-
+  private final Encode encode = new Encode();
   private final Climber climb = new Climber();
   private final Manipulator manipulate = new Manipulator();
   private final AutoSelector autoSelector;
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  final         CommandXboxController driverXbox = new CommandXboxController(0);
+  final CommandXboxController driverXbox = new CommandXboxController(0);
   // The robot's subsystems and commands are defined here...
-  private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
+  private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/falcon"));
   // Applies deadbands and inverts controls because joysticks
   // are back-right positive while robot
@@ -104,8 +110,10 @@ public class RobotContainer
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-  public RobotContainer()
+  public RobotContainer() 
   {
+
+    autoSelector = new AutoSelector(drivebase, manipulate);
     // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
@@ -126,14 +134,14 @@ public class RobotContainer
    
   
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
+      driverXbox.y().toggleOnTrue(new Read(encode));
+      driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+      driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
+      driverXbox.b().whileTrue(
+        Commands.deferredProxy(() -> drivebase.driveToPose(
+                                   new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
+                              ));
 
-      driverXbox.b().whileTrue(drivebase.sysIdDriveMotorCommand());
-      driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      driverXbox.y().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
-      driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      driverXbox.back().whileTrue(drivebase.centerModulesCommand());
-      driverXbox.leftBumper().onTrue(Commands.none());
-      driverXbox.rightBumper().onTrue(Commands.none());
     
 
   }
