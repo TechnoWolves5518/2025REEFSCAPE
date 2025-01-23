@@ -169,7 +169,7 @@ public class Robot extends TimedRobot
     orchestra.addInstrument(brturn);
     orchestra.addInstrument(frdrive);
     orchestra.addInstrument(frturn);
-    orchestra.loadMusic("JohnCena.chrp");
+    orchestra.loadMusic("Rickroll.chrp");
     orchestra.play();
   }
 
