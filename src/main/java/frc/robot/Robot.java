@@ -153,7 +153,6 @@ public class Robot extends TimedRobot
     CommandScheduler.getInstance().cancelAll();
     m_robotContainer.setDriveMode();
     Orchestra orchestra = new Orchestra();
-    CANBus canbus = new CANBus();
     TalonFX bldrive = new TalonFX(8);
     TalonFX blturn = new TalonFX(7);
     TalonFX fldrive = new TalonFX(11);
@@ -170,7 +169,7 @@ public class Robot extends TimedRobot
     orchestra.addInstrument(brturn);
     orchestra.addInstrument(frdrive);
     orchestra.addInstrument(frturn);
-    orchestra.loadMusic("Rickrolll.chrp");
+    orchestra.loadMusic("JohnCena.chrp");
     orchestra.play();
   }
 
