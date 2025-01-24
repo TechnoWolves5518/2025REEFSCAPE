@@ -134,7 +134,7 @@ public class RobotContainer
    
   
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
-      driverXbox.y().toggleOnTrue(new Read(encode));
+      driverXbox.y().toggleOnTrue(new Read(encode).ignoringDisable(true));
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
       driverXbox.b().whileTrue(
