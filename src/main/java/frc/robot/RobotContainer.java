@@ -20,6 +20,7 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 import swervelib.SwerveInputStream;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Manipulator;
 import frc.robot.autos.AutoSelector;
 import frc.robot.subsystems.Encode;
@@ -34,6 +35,7 @@ public class RobotContainer
 {
   private final Encode encode = new Encode();
   private final Climber climb = new Climber();
+  private final Elevator elevate = new Elevator();
   private final Manipulator manipulate = new Manipulator();
   private final AutoSelector autoSelector;
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -134,7 +136,7 @@ public class RobotContainer
    
   
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
-      driverXbox.y().toggleOnTrue(new Read(encode));
+      driverXbox.y().toggleOnTrue(new Read(encode, elevate));
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
       driverXbox.b().whileTrue(
