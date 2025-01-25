@@ -9,12 +9,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import com.ctre.phoenix6.Orchestra;
-import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.hardware.ParentDevice;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.CANBus;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as
  * described in the TimedRobot documentation. If you change the name of this class or the package after creating this
@@ -22,7 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends TimedRobot
 {
-  public Orchestra orchestra = new Orchestra();
+
   private static Robot   instance;
   private        Command m_autonomousCommand;
 
@@ -153,28 +148,6 @@ public class Robot extends TimedRobot
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
     m_robotContainer.setDriveMode();
-    
-    TalonFX bldrive = new TalonFX(8);
-    TalonFX blturn = new TalonFX(7);
-    TalonFX fldrive = new TalonFX(11);
-    TalonFX flturn = new TalonFX(10);
-    TalonFX brdrive = new TalonFX(2);
-    TalonFX brturn = new TalonFX(1);
-    TalonFX frdrive = new TalonFX(5);
-    TalonFX frturn = new TalonFX(4);
-    orchestra.addInstrument(bldrive);
-    orchestra.addInstrument(blturn);
-    orchestra.addInstrument(fldrive);
-    orchestra.addInstrument(flturn);
-    orchestra.addInstrument(brdrive);
-    orchestra.addInstrument(brturn);
-    orchestra.addInstrument(frdrive);
-    orchestra.addInstrument(frturn);
-    SmartDashboard.putBoolean("JohnCena", false);
-    SmartDashboard.putBoolean("Rickroll", false);
-    SmartDashboard.putBoolean("March", false);
-    SmartDashboard.putBoolean("Patriotic", false);
-    SmartDashboard.putBoolean("Play", false);
   }
 
   /**
@@ -183,32 +156,6 @@ public class Robot extends TimedRobot
   @Override
   public void testPeriodic()
   {
-    var song = "";
-    if(SmartDashboard.getBoolean("JohnCena", false)) {
-      song = "JohnCena.chrp";
-    }
-    else if(SmartDashboard.getBoolean("Rickroll", false)) {
-      song = "Rickroll.chrp";
-    }
-    else if(SmartDashboard.getBoolean("March", false)) {
-      song = "march.chrp";
-    }
-    else if(SmartDashboard.getBoolean("Patriotic", false)) {
-      song = "Patriotic.chrp";
-    }
-    else {
-      song = "";
-    }
-
-    if(SmartDashboard.getBoolean("Play", false)) {
-      if(!orchestra.isPlaying()){
-        orchestra.loadMusic(song);
-        orchestra.play();
-      }
-    }
-    else {
-      orchestra.stop();
-    }
   }
 
   /**
