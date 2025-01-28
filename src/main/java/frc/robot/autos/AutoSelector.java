@@ -18,7 +18,8 @@ public class AutoSelector {
 
 
       public AutoSelector(SwerveSubsystem swerve, Manipulator manipulator){
-            chooser.setDefaultOption("Default(Oneshot)", new PathPlannerAuto("New Auto"));
+            chooser.setDefaultOption("Default", new PathPlannerAuto("New Auto"));
+            chooser.addOption("Tets", new PathPlannerAuto("Test Auto"));
 
             SmartDashboard.putData(chooser);
       }

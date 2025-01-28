@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.config.PIDConstants;
+
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
@@ -31,12 +33,12 @@ public final class Constants
   public static final double MANIPULATE_SPEED  = 0.25;
   // Maximum speed of the robot in meters per second, used to limit acceleration.
 
-//  public static final class AutonConstants
-//  {
-//
-//    public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
-//    public static final PIDConstants ANGLE_PID       = new PIDConstants(0.4, 0, 0.01);
-//  }
+ public static final class AutonConstants
+ {
+
+   public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
+   public static final PIDConstants ANGLE_PID       = new PIDConstants(0.4, 0, 0.01);
+ }
 
   // CAN IDs
   public static final int CLIMBER = 17;
@@ -54,10 +56,11 @@ public final class Constants
   {
 
     // Joystick Deadband
-    public static final double DEADBAND        = 0.1;
-    public static final double LEFT_Y_DEADBAND = 0.1;
-    public static final double RIGHT_X_DEADBAND = 0.1;
-    public static final double LEFT_X_DEADBAND = 0.1;
+    public static final double DEADBAND        = 0.2;
+    public static final double LEFT_Y_DEADBAND = 0.2;
+    public static final double RIGHT_X_DEADBAND = 0.2;
+    public static final double LEFT_X_DEADBAND = 0.2;
     public static final double TURN_CONSTANT    = 6;
   }
+
 }
