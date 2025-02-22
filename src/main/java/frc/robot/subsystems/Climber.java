@@ -6,13 +6,21 @@ package frc.robot.subsystems;
 
 import com.playingwithfusion.CANVenom;
 import frc.robot.Constants;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
   static CANVenom climber;
+  Servo servo;
+
   public Climber() {
     climber = new CANVenom(Constants.CLIMBER);
+    servo = new Servo(0);
+  }
+
+  public void setServo(double value) {
+    servo.set(value);
   }
 
   public void climb(double speed) {

@@ -4,31 +4,33 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.hardware.CANcoder;
 
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Encode extends SubsystemBase {
   /** Creates a new Encode. */
-  static TalonFX frontRight;
-  static TalonFX frontLeft;
-  static TalonFX backRight;
-  static TalonFX backLeft;
+  static CANcoder frontRight;
+  static CANcoder frontLeft;
+  static CANcoder backRight;
+  static CANcoder backLeft;
   public Encode() {
-    frontRight = new TalonFX(Constants.FRONT_RIGHT);
-    frontLeft = new TalonFX(Constants.FRONT_LEFT);
-    backRight = new TalonFX(Constants.BACK_RIGHT);
-    backLeft = new TalonFX(Constants.BACK_LEFT);
+    frontRight = new CANcoder(Constants.FRONT_RIGHT);
+    frontLeft = new CANcoder(Constants.FRONT_LEFT);
+    backRight = new CANcoder(Constants.BACK_RIGHT);
+    backLeft = new CANcoder(Constants.BACK_LEFT);
+  }
+  public void read() {
+    SmartDashboard.putNumber("Front Right: ", frontRight.getAbsolutePosition().getValue().in(Units.Degrees));
+    SmartDashboard.putNumber("Front Left: ", frontLeft.getAbsolutePosition().getValue().in(Units.Degrees));
+    SmartDashboard.putNumber("Back Right: ", backRight.getAbsolutePosition().getValue().in(Units.Degrees));
+    SmartDashboard.putNumber("Back Left: ", backLeft.getAbsolutePosition().getValue().in(Units.Degrees));
+    
   }
 
-  public void read() {
-    SmartDashboard.putNumber("Front Right: ", frontRight.get());
-    SmartDashboard.putNumber("Front Left: ", frontLeft.get());
-    SmartDashboard.putNumber("Back Right: ", backRight.get());
-    SmartDashboard.putNumber("Back Left: ", backLeft.get());
-  }
 
   @Override
   public void periodic() {
