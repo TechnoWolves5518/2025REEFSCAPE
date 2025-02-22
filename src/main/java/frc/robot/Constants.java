@@ -44,6 +44,17 @@ public final class Constants
   public static final int CLIMBER = 17;
   public static final int MANIPULATORLEFT = 15;
   public static final int MANIPULATORRIGHT = 16;
+  public static final int ELEVATOR = 19;
+  public static final int ELEVATOR_ENCODER = 20;
+
+
+  // Elevator properties
+  public static final double ELEVATORSPEED = .3;
+  public static final int L1ANGLE = 0;
+  public static final int L2ANGLE = 0;
+  public static final int L3ANGLE = 0;
+  public static final int L4ANGLE = 0;
+  public static final int BARGEANGLE = 0;
 
   public static final class DrivebaseConstants
   {

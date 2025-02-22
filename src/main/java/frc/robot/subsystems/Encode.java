@@ -4,9 +4,7 @@
 
 package frc.robot.subsystems;
 
-
 import com.ctre.phoenix6.hardware.CANcoder;
-// import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
