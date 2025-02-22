@@ -4,9 +4,10 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.playingwithfusion.CANVenom;
-import com.playingwithfusion.CANVenom.BrakeCoastMode;
+
 
 import frc.robot.Constants;
 import edu.wpi.first.units.Units;
@@ -15,11 +16,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new elevator. */
-  static CANVenom elevateMotor;
+  static TalonSRX elevateMotor;
   static CANcoder spinReader;
 
   public Elevator() {
-    elevateMotor = new CANVenom(Constants.ELEVATOR);
+    elevateMotor = new TalonSRX(Constants.ELEVATOR);
     spinReader = new CANcoder(Constants.ELEVATOR_ENCODER);
   }
 
@@ -27,26 +28,32 @@ public class Elevator extends SubsystemBase {
     double currentAngle = spinReader.getPosition().getValue().in(Units.Degrees);
      if (currentAngle < angle){
         while (currentAngle < angle){
-          elevateMotor.set(speed);
+          elevateMotor.set(TalonSRXControlMode.PercentOutput, speed * (currentAngle/10));
           currentAngle = spinReader.getPosition().getValue().in(Units.Degrees);
         }
       }
       else if (currentAngle > angle){
         while (currentAngle > angle){
-        elevateMotor.set(-speed);
+        elevateMotor.set(TalonSRXControlMode.PercentOutput,-speed * (currentAngle/10));
         currentAngle = spinReader.getPosition().getValue().in(Units.Degrees);
       }
     }
      
   }
 
-  public void hold(){
-    elevateMotor.setBrakeCoastMode(BrakeCoastMode.Brake);
-  }
+
 
   public void elevatorRead(){
     SmartDashboard.putNumber("Elevator RAW angle", spinReader.getAbsolutePosition().getValue().in(Units.Degrees));
     SmartDashboard.putNumber("Elevator angle", spinReader.getPosition().getValue().in(Units.Degrees));
+  }
+
+  public void adjust(double speed){
+    elevateMotor.set(TalonSRXControlMode.PercentOutput, speed);
+  }
+
+  public void release(double speed){
+    elevateMotor.set(TalonSRXControlMode.PercentOutput, speed/.75);
   }
 
   @Override

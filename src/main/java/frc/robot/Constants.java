@@ -47,7 +47,7 @@ public final class Constants
 
 
   // Elevator properties
-  public static final int ELEVATORSPEED = 1;
+  public static final double ELEVATORSPEED = .3;
   public static final int L1ANGLE = 0;
   public static final int L2ANGLE = 0;
   public static final int L3ANGLE = 0;

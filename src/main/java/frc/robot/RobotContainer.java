@@ -25,6 +25,8 @@ import frc.robot.subsystems.Manipulator;
 import frc.robot.autos.AutoSelector;
 import frc.robot.subsystems.Encode;
 import frc.robot.commands.Read;
+import frc.robot.commands.elevator.Down;
+import frc.robot.commands.elevator.Up;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -34,6 +36,7 @@ import frc.robot.commands.Read;
 public class RobotContainer
 {
   private final Encode encode = new Encode();
+  @SuppressWarnings("unused")
   private final Climber climb = new Climber();
   private final Elevator elevate = new Elevator();
   private final Manipulator manipulate = new Manipulator();
@@ -139,6 +142,8 @@ public class RobotContainer
       driverXbox.y().toggleOnTrue(new Read(encode, elevate));
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
+      driverXbox.pov(0).whileTrue(new Up(elevate));
+      driverXbox.pov(180).whileTrue(new Down(elevate));
       driverXbox.b().whileTrue(
         Commands.deferredProxy(() -> drivebase.driveToPose(
                                    new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
