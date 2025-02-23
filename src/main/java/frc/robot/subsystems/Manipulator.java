@@ -4,23 +4,23 @@
 
 package frc.robot.subsystems;
 
-import com.playingwithfusion.CANVenom;
+import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Manipulator extends SubsystemBase {
   /** Creates a new Manipulator. */
-  public static CANVenom manipulatorLeft;
-  public static CANVenom manipulatorRight;
+  public static SparkMax manipulatorLeft;
+  public static SparkMax manipulatorRight;
 
   public Manipulator() {
-    manipulatorLeft = new CANVenom(Constants.MANIPULATORLEFT);
-    manipulatorLeft = new CANVenom(Constants.MANIPULATORRIGHT);
+    manipulatorLeft = new SparkMax(Constants.MANIPULATORLEFT, SparkMax.MotorType.kBrushless);
+    manipulatorRight = new SparkMax(Constants.MANIPULATORRIGHT, SparkMax.MotorType.kBrushless);
   }
 
   public void manipulate(double speed) {
-    manipulatorLeft.set(speed);
-    manipulatorRight.set(-speed);
+    manipulatorLeft.set(-speed);
+    manipulatorRight.set(speed);
   }
 
   @Override

@@ -26,12 +26,15 @@ import frc.robot.autos.AutoSelector;
 import frc.robot.subsystems.Encode;
 import frc.robot.commands.Manipulate;
 import frc.robot.commands.Read;
+import frc.robot.commands.ReverseManipulate;
 import frc.robot.commands.elevator.Barge;
+import frc.robot.commands.elevator.Down;
 import frc.robot.commands.elevator.L1;
 import frc.robot.commands.elevator.L2;
 import frc.robot.commands.elevator.L3;
 import frc.robot.commands.elevator.L4;
 import frc.robot.commands.elevator.ReturnZero;
+import frc.robot.commands.elevator.Up;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -153,9 +156,13 @@ public class RobotContainer
       schmoXbox.b().onTrue(new L2(elevator));
       schmoXbox.y().onTrue(new L3(elevator));
       schmoXbox.x().onTrue(new L4(elevator));
-      schmoXbox.rightTrigger().onTrue(new ReturnZero(elevator));
-      schmoXbox.leftTrigger().onTrue(new Manipulate(manipulate));
+      //schmoXbox.leftTrigger().onTrue(new ReturnZero(elevator));
+      schmoXbox.leftTrigger().whileTrue(new ReverseManipulate(manipulate));
+      schmoXbox.rightTrigger().whileTrue(new Manipulate(manipulate));
       schmoXbox.start().onTrue(new Barge(elevator));
+      schmoXbox.pov(180).whileTrue(new Up(elevator));
+      schmoXbox.pov(0).whileTrue(new Down(elevator));
+      
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
       driverXbox.y().toggleOnTrue(new Read(encode, elevator).ignoringDisable(true));
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));

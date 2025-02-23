@@ -30,7 +30,7 @@ public final class Constants
   public static final Integer BACK_RIGHT = 3;
   public static final Integer BACK_LEFT = 9;
   public static final double CLIMB_SPEED  = 0.25;
-  public static final double MANIPULATE_SPEED  = 0.25;
+  public static final double MANIPULATE_SPEED  = 0.15;
   // Maximum speed of the robot in meters per second, used to limit acceleration.
 
  public static final class AutonConstants
