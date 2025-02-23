@@ -24,9 +24,14 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Manipulator;
 import frc.robot.autos.AutoSelector;
 import frc.robot.subsystems.Encode;
+import frc.robot.commands.Manipulate;
 import frc.robot.commands.Read;
-import frc.robot.commands.elevator.Down;
-import frc.robot.commands.elevator.Up;
+import frc.robot.commands.elevator.Barge;
+import frc.robot.commands.elevator.L1;
+import frc.robot.commands.elevator.L2;
+import frc.robot.commands.elevator.L3;
+import frc.robot.commands.elevator.L4;
+import frc.robot.commands.elevator.ReturnZero;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -35,14 +40,20 @@ import frc.robot.commands.elevator.Up;
  */
 public class RobotContainer
 {
+  private final Elevator elevator = new Elevator();
   private final Encode encode = new Encode();
-  @SuppressWarnings("unused")
   private final Climber climb = new Climber();
-  private final Elevator elevate = new Elevator();
   private final Manipulator manipulate = new Manipulator();
+  // NamedCommands.registerCommand("L1", new L1(elevator));
+  // NamedCommands.registerCommand("L2", new L2(elevator));
+  // NamedCommands.registerCommand("L3", new L3(elevator));
+  // NamedCommands.registerCommand("L4", new L4(elevator));
+  // NamedCommands.registerCommand("ReturnZero", new ReturnZero(elevator));
+
   private final AutoSelector autoSelector;
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final CommandXboxController driverXbox = new CommandXboxController(0);
+  final CommandXboxController schmoXbox = new CommandXboxController(1);
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/falcon"));
@@ -138,13 +149,17 @@ public class RobotContainer
     // (Condition) ? Return-On-True : Return-on-False
 
    
-  
+      schmoXbox.a().onTrue(new L1(elevator));
+      schmoXbox.b().onTrue(new L2(elevator));
+      schmoXbox.y().onTrue(new L3(elevator));
+      schmoXbox.x().onTrue(new L4(elevator));
+      schmoXbox.rightTrigger().onTrue(new ReturnZero(elevator));
+      schmoXbox.leftTrigger().onTrue(new Manipulate(manipulate));
+      schmoXbox.start().onTrue(new Barge(elevator));
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
-      driverXbox.y().toggleOnTrue(new Read(encode, elevate));
+      driverXbox.y().toggleOnTrue(new Read(encode, elevator).ignoringDisable(true));
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      driverXbox.pov(0).whileTrue(new Up(elevate));
-      driverXbox.pov(180).whileTrue(new Down(elevate));
       driverXbox.b().whileTrue(
         Commands.deferredProxy(() -> drivebase.driveToPose(
                                    new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
