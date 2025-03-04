@@ -18,10 +18,18 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.commands.*;
+import frc.robot.commands.elevator.*;
+import frc.robot.subsystems.*;
 
 public class RobotContainer {
+
+    private final Elevator elevator = new Elevator();
+    private final Encode encode = new Encode();
+    private final Climber climb = new Climber();
+    private final Manipulator manipulate = new Manipulator();
+
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double TotalMaxSpeed = MaxSpeed * SwerveConstants.speedMultiplier; // Total maximum speed of robot
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -45,10 +53,10 @@ public class RobotContainer {
     private final CommandXboxController driverXbox = new CommandXboxController(0);
     private final CommandXboxController schmoXbox = new CommandXboxController(1);
 
-    SlewRateLimiter driverLeftXLimiter = new SlewRateLimiter(.5);
-    SlewRateLimiter driverLeftYLimiter = new SlewRateLimiter(.5);
-    SlewRateLimiter driverRightXLimiter = new SlewRateLimiter(.5);
-    SlewRateLimiter driverRightYLimiter = new SlewRateLimiter(.5);
+    SlewRateLimiter driverLeftXLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
+    SlewRateLimiter driverLeftYLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
+    SlewRateLimiter driverRightXLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Turn);
+    SlewRateLimiter driverRightYLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Turn);
       
     // Functions to get the slew rate limited values of the joysticks
     double driverLeftXLimited() {
@@ -69,9 +77,6 @@ public class RobotContainer {
     public RobotContainer() {
         configureBindings();
     }
-
-    private double speedMultiplier = 1;
-    private double angleMultiplier = 1;
  
 
 
@@ -89,37 +94,44 @@ public class RobotContainer {
             )
         );
 
+        // Schmo commands:
+        schmoXbox.pov(180).whileTrue(new Up(elevator));
+        schmoXbox.pov(0).whileTrue(new Down(elevator));
+        schmoXbox.pov(0).and(schmoXbox.pov(180)).whileFalse(new Brake(elevator));
+        schmoXbox.leftTrigger().whileTrue(new ReverseManipulate(manipulate));
+        schmoXbox.rightTrigger().whileTrue(new ReverseManipulate(manipulate));
+        schmoXbox.a().onTrue(new  L1(elevator));
+        schmoXbox.b().onTrue(new L2(elevator));
+        schmoXbox.x().onTrue(new L3(elevator));
+        schmoXbox.y().onTrue(new L4(elevator));
+        schmoXbox.back().onTrue(new ReturnZero(elevator));
+        schmoXbox.start().onTrue(new Barge(elevator));
+        
+
         driverXbox.start().whileTrue(drivetrain.applyRequest(() -> brake));
         driverXbox.back().whileTrue(drivetrain.applyRequest(() ->
             point.withModuleDirection(new Rotation2d(-driverXbox.getLeftY(), -driverXbox.getLeftX()))
         ));
         
         // Toggle slow mode when left bumper is pressed.
-        driverXbox.leftBumper().onTrue(Commands.runOnce(() -> {slowMode = !slowMode;
-          SmartDashboard.putBoolean("Slow", slowMode);
-          if (slowMode) {
-            speedMultiplier = SwerveConstants.SlowSpeed;
-            angleMultiplier = SwerveConstants.SlowAngle;
-        }
-        else {
-            speedMultiplier = 1;
-            angleMultiplier = 1;
-        }
-        drivetrain.setDefaultCommand(
-            // Drivetrain will execute this command periodically
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(-driverLeftYLimited() * TotalMaxSpeed * speedMultiplier) // Drive forward with negative Y (forward)
-                    .withVelocityY(-driverLeftXLimited() * TotalMaxSpeed * speedMultiplier) // Drive left with negative X (left)
-                    .withRotationalRate(-driverRightXLimited() * MaxAngularRate * angleMultiplier) // Drive counterclockwise with negative X (left)
-            )
-        );
-      }));
+        driverXbox.leftBumper().and(() -> !driverXbox.rightBumper().getAsBoolean()).whileTrue(drivetrain.applyRequest(() ->
+        drive.withVelocityX(-driverLeftYLimited() * TotalMaxSpeed * Constants.SwerveConstants.SlowSpeed) // Drive forward with negative Y (forward)
+            .withVelocityY(-driverLeftXLimited() * TotalMaxSpeed * Constants.SwerveConstants.SlowSpeed) // Drive left with negative X (left)
+            .withRotationalRate(-driverRightXLimited() * MaxAngularRate * Constants.SwerveConstants.SlowAngle) // Drive counterclockwise with negative X (left)
+    ));
         
         // Drive robot oriented while right bumper is held.
-        driverXbox.rightBumper().whileTrue(drivetrain.applyRequest(() ->
-            driveRobot.withVelocityX(-driverXbox.getLeftY() * TotalMaxSpeed * speedMultiplier)
-                .withVelocityY(-driverXbox.getLeftX() * TotalMaxSpeed * speedMultiplier)
-                .withRotationalRate(-driverXbox.getRightX() * MaxAngularRate * speedMultiplier)
+        driverXbox.rightBumper().and(() -> !driverXbox.leftBumper().getAsBoolean()).whileTrue(drivetrain.applyRequest(() ->
+            driveRobot.withVelocityX(-driverXbox.getLeftY() * TotalMaxSpeed)
+                .withVelocityY(-driverXbox.getLeftX() * TotalMaxSpeed)
+                .withRotationalRate(-driverXbox.getRightX() * MaxAngularRate)
+        ));
+
+        // Drive robot oriented and slow when the right and left bumpers are held
+        driverXbox.rightBumper().and(driverXbox.leftBumper()).whileTrue(drivetrain.applyRequest(() ->
+            driveRobot.withVelocityX(-driverXbox.getLeftY() * TotalMaxSpeed * Constants.SwerveConstants.SlowSpeed)
+                .withVelocityY(-driverXbox.getLeftX() * TotalMaxSpeed * Constants.SwerveConstants.SlowSpeed)
+                .withRotationalRate(-driverXbox.getRightX() * MaxAngularRate * Constants.SwerveConstants.SlowAngle)
         ));
 
         // reset the field-centric heading on left bumper press
