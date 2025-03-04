@@ -22,9 +22,9 @@ public final class Constants
 {
 
   public static final double ROBOT_MASS = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
-  public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
+  public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0 , Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
-  public static final double MAX_SPEED  = Units.feetToMeters(14.5);
+  public static final double MAX_SPEED  = Units.feetToMeters(2);
   public static final Integer FRONT_RIGHT = 6;
   public static final Integer FRONT_LEFT = 12;
   public static final Integer BACK_RIGHT = 3;
@@ -45,11 +45,12 @@ public final class Constants
   public static final int MANIPULATORLEFT = 15;
   public static final int MANIPULATORRIGHT = 16;
   public static final int ELEVATOR = 19;
-  public static final int ELEVATOR_ENCODER = 20;
+  public static final int ELEVATOR2 = 20;
+  public static final int ELEVATOR_ENCODER = 21;
 
 
   // Elevator properties
-  public static final double ELEVATORSPEED = .3;
+  public static final double ELEVATORSPEED = .15;
   public static final int L1ANGLE = 0;
   public static final int L2ANGLE = 0;
   public static final int L3ANGLE = 0;

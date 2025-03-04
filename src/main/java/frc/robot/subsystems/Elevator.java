@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -18,10 +19,16 @@ public class Elevator extends SubsystemBase {
   /** Creates a new elevator. */
   static TalonSRX elevateMotor;
   static CANcoder spinReader;
+  static TalonSRX othermotor;
 
   public Elevator() {
     elevateMotor = new TalonSRX(Constants.ELEVATOR);
+    othermotor = new TalonSRX(20);
     spinReader = new CANcoder(Constants.ELEVATOR_ENCODER);
+    elevateMotor.setNeutralMode(NeutralMode.Brake);
+    othermotor.setNeutralMode(NeutralMode.Brake);
+
+    
   }
 
   public void elevate(double speed, double angle){
@@ -50,11 +57,14 @@ public class Elevator extends SubsystemBase {
 
   public void adjust(double speed){
     elevateMotor.set(TalonSRXControlMode.PercentOutput, speed);
+    othermotor.follow(elevateMotor);
   }
 
   public void release(double speed){
     elevateMotor.set(TalonSRXControlMode.PercentOutput, speed/.75);
+    elevateMotor.follow(elevateMotor);
   }
+
 
   @Override
   public void periodic() {
