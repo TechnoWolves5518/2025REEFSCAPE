@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.playingwithfusion.CANVenom;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import frc.robot.Constants;

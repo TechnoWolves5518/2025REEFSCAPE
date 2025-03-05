@@ -16,38 +16,23 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.wpilibj.smartdashboard.*;
-
-<<<<<<< Updated upstream
 import frc.robot.generated.TunerConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.*;
 import frc.robot.commands.elevator.*;
 import frc.robot.subsystems.*;
-=======
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
- * little robot logic should actually be handled in the {@link Robot} periodic methods (other than the scheduler calls).
- * Instead, the structure of the robot (including subsystems, commands, and trigger mappings) should be declared here.
- */
-public class RobotContainer
-{
+
+public class RobotContainer {
+
   private final Elevator elevator = new Elevator();
   private final Encode encode = new Encode();
   private final Climber climb = new Climber();
   private final Manipulator manipulate = new Manipulator();
-  NamedCommands.registerCommand("L1", new L1(elevator));
-  NamedCommands.registerCommand("L2", new L2(elevator));
-  NamedCommands.registerCommand("L3", new L3(elevator));
-  NamedCommands.registerCommand("L4", new L4(elevator));
-  NamedCommands.registerCommand("ReturnZero", new ReturnZero(elevator));
->>>>>>> Stashed changes
-
-public class RobotContainer {
-
-    private final Elevator elevator = new Elevator();
-    private final Encode encode = new Encode();
-    private final Climber climb = new Climber();
-    private final Manipulator manipulate = new Manipulator();
+  // NamedCommands.registerCommand("L1", new L1(elevator));
+  // NamedCommands.registerCommand("L2", new L2(elevator));
+  // NamedCommands.registerCommand("L3", new L3(elevator));
+  // NamedCommands.registerCommand("L4", new L4(elevator));
+  // NamedCommands.registerCommand("ReturnZero", new ReturnZero(elevator));
 
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double TotalMaxSpeed = MaxSpeed * SwerveConstants.speedMultiplier; // Total maximum speed of robot
