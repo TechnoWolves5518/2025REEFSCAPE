@@ -14,7 +14,6 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import frc.robot.generated.TunerConstants;
 import frc.robot.Constants.SwerveConstants;
@@ -28,6 +27,7 @@ public class RobotContainer {
   private final Encode encode = new Encode();
   private final Climber climb = new Climber();
   private final Manipulator manipulate = new Manipulator();
+
   // NamedCommands.registerCommand("L1", new L1(elevator));
   // NamedCommands.registerCommand("L2", new L2(elevator));
   // NamedCommands.registerCommand("L3", new L3(elevator));
@@ -102,8 +102,10 @@ public class RobotContainer {
         schmoXbox.pov(180).whileTrue(new Up(elevator));
         schmoXbox.pov(0).whileTrue(new Down(elevator));
         schmoXbox.pov(0).and(schmoXbox.pov(180)).whileFalse(new Brake(elevator));
-        schmoXbox.leftTrigger().whileTrue(new ReverseManipulate(manipulate));
+        schmoXbox.leftTrigger().whileTrue(new Manipulate(manipulate));
         schmoXbox.rightTrigger().whileTrue(new ReverseManipulate(manipulate));
+        schmoXbox.leftBumper().whileTrue(new TestServo(climb));
+        schmoXbox.rightBumper().whileTrue(new Climb(climb));
         schmoXbox.a().onTrue(new  L1(elevator));
         schmoXbox.b().onTrue(new L2(elevator));
         schmoXbox.x().onTrue(new L3(elevator));

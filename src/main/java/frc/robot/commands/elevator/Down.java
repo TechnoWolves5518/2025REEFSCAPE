@@ -25,7 +25,7 @@ public class Down extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_elevator.adjust(-Constants.ElevatorConstants.ELEVATORSPEED * 2);
+    m_elevator.adjust(-Constants.ElevatorConstants.ELEVATORSPEED);
   }
 
   // Called once the command ends or is interrupted.

@@ -5,36 +5,32 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
-import frc.robot.subsystems.Manipulator;
+import frc.robot.subsystems.Climber;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ReverseManipulate extends Command {
-  
-    /** Creates a new ReverseManipulate. */
-    Manipulator manipulate;
-    public ReverseManipulate(Manipulator manipulate) {
-    this.manipulate = manipulate;
-    addRequirements(manipulate);
+public class TestServo extends Command {
+  Climber setServo;
+  /** Creates a new TestServo. */
+  public TestServo(Climber setServo) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.setServo = setServo;
+    addRequirements(setServo);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    manipulate.manipulate(-1 * Constants.ManipulatorConstants.MANIPULATE_SPEED/1.5);
+    setServo.setServo(1);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    manipulate.manipulate(0);
+    setServo.setServo(0);
   }
 
   // Returns true when the command should end.
