@@ -29,7 +29,8 @@ public class Constants {
         public static final int ELEVATOR = 19;
         public static final int ELEVATOR2 = 20;
         public static final int ELEVATOR_ENCODER = 20;
-        public static final double ELEVATORSPEED = .3;
+        public static final double ELEVATORSPEED = .8;
+        public static final double ELEVATORDOWN = .1;
         public static final int L1ANGLE = 0;
         public static final int L2ANGLE = 0;
         public static final int L3ANGLE = 0;

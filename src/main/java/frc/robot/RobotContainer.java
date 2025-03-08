@@ -99,8 +99,8 @@ public class RobotContainer {
         );
 
         // Schmo commands:
-        schmoXbox.pov(180).whileTrue(new Up(elevator)).whileFalse(new Hold(elevator));
-        schmoXbox.pov(0).whileTrue(new Down(elevator));
+        schmoXbox.pov(0).whileTrue(new Up(elevator)).whileFalse(new Hold(elevator));
+        schmoXbox.pov(180).whileTrue(new Down(elevator)).whileFalse(new Hold(elevator));
         //schmoXbox.pov(0).and(schmoXbox.pov(180));
         schmoXbox.leftTrigger().whileTrue(new Manipulate(manipulate));
         schmoXbox.rightTrigger().whileTrue(new ReverseManipulate(manipulate));
