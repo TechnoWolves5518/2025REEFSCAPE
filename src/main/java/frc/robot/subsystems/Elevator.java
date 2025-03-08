@@ -55,12 +55,8 @@ public class Elevator extends SubsystemBase {
     elevateMotor1.set(TalonSRXControlMode.PercentOutput, speed);
   }
 
-  public void brake(){
-    elevateMotor1.set(TalonSRXControlMode.Velocity, 0);
-  }
-
-  public void endBrake() {
-    elevateMotor1.set(TalonSRXControlMode.Disabled, 0);
+  public void hold(){
+    elevateMotor1.set(TalonSRXControlMode.PercentOutput, .1);
   }
 
   public void release(double speed){
