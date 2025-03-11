@@ -60,7 +60,8 @@ public class RobotContainer {
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-    private boolean fieldCentric = false;
+    // WE DONT NEED THAT
+    // private boolean fieldCentric = false;
     private boolean slowMode = false;
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
