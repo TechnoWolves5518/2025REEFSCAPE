@@ -28,7 +28,6 @@ public class Encode extends SubsystemBase {
     SmartDashboard.putNumber("Front Left: ", frontLeft.getAbsolutePosition().getValue().in(Units.Degrees));
     SmartDashboard.putNumber("Back Right: ", backRight.getAbsolutePosition().getValue().in(Units.Degrees));
     SmartDashboard.putNumber("Back Left: ", backLeft.getAbsolutePosition().getValue().in(Units.Degrees));
-    
   }
 
 

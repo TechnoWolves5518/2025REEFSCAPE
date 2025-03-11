@@ -17,11 +17,12 @@ public class Climber extends SubsystemBase {
 
   public Climber() {
     climber = new TalonSRX(Constants.ClimberConstants.CLIMBER);
-    servo = new Servo(0);
+    servo = new Servo(Constants.ClimberConstants.SERVO_NUMBER);
   }
 
-  public void setServo(double value) {
-    servo.set(value);
+  public void setServo(int value) {
+    System.out.println("Servo Angle: " + servo.getAngle());
+    servo.setAngle(value);
   }
 
   public void climb(double speed) {

@@ -22,7 +22,6 @@ import frc.robot.commands.elevator.*;
 import frc.robot.subsystems.*;
 
 public class RobotContainer {
-
   private final Elevator elevator = new Elevator();
   private final Encode encode = new Encode();
   private final Climber climb = new Climber();
@@ -104,7 +103,8 @@ public class RobotContainer {
         //schmoXbox.pov(0).and(schmoXbox.pov(180));
         schmoXbox.leftTrigger().whileTrue(new Manipulate(manipulate));
         schmoXbox.rightTrigger().whileTrue(new ReverseManipulate(manipulate));
-        schmoXbox.leftBumper().whileTrue(new TestServo(climb));
+        schmoXbox.leftBumper().onTrue(new TestServo(climb));
+        schmoXbox.pov(90).onTrue(new ReverseServo(climb));
         schmoXbox.rightBumper().whileTrue(new Climb(climb));
         schmoXbox.a().onTrue(new  L1(elevator));
         schmoXbox.b().onTrue(new L2(elevator));
