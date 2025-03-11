@@ -13,12 +13,10 @@ public class Read extends Command {
   /** Creates a new Read. */
   Encode m_encode;
   Elevator m_elevator;
-  public Read(Encode m_encode, Elevator m_elevator) {
+  public Read(Encode m_encode) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_encode = m_encode;
-    this.m_elevator = m_elevator;
     addRequirements(m_encode);
-    addRequirements(m_elevator);
   }
 
   // Called when the command is initially scheduled.
@@ -29,7 +27,7 @@ public class Read extends Command {
   @Override
   public void execute() {
     m_encode.read();
-    m_elevator.elevatorRead();
+
   }
 
   // Called once the command ends or is interrupted.

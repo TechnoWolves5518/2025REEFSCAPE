@@ -13,16 +13,19 @@ public class Constants {
         public static final Integer BACK_RIGHT = 3;
         public static final Integer BACK_LEFT = 9;
     }
-
+    
     public class ManipulatorConstants {
         public static final double MANIPULATE_SPEED  = 0.15;
         public static final int MANIPULATORLEFT = 15;
         public static final int MANIPULATORRIGHT = 16;
     }
-
+    
     public class ClimberConstants {
         public static final double CLIMB_SPEED  = 0.25;
         public static final int CLIMBER = 17;
+        public static final Integer SERVO_NUMBER = 1;
+        public static final int SERVO_ON = 40;
+        public static final int SERVO_OFF = 0;
     }
 
     public class ElevatorConstants {
