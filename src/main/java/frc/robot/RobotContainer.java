@@ -111,7 +111,6 @@ public class RobotContainer {
         schmoXbox.x().onTrue(new L3(elevator));
         schmoXbox.y().onTrue(new L4(elevator));
         schmoXbox.back().onTrue(new ReturnZero(elevator));
-        schmoXbox.start().onTrue(new Barge(elevator));
         
 
         driverXbox.start().whileTrue(drivetrain.applyRequest(() -> brake));

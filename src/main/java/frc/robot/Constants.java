@@ -5,7 +5,7 @@ public class Constants {
         public static final double SlowSpeed = 0.1; // Speed multiplier for slow mode
         public static final double deadband = 0.1; // Controller deadband
         public static final double speedMultiplier = 0.8; // Scaler for speed in all modes
-        public static final double SlowAngle = 0.1; // Angle multiplier for slow mode
+        public static final double SlowAngle = 0.1; // TIME multiplier for slow mode
         public static final double SlewLimit_Drive = 0.5;
         public static final double SlewLimit_Turn = 0.5;
         public static final Integer FRONT_RIGHT = 6;
@@ -34,10 +34,10 @@ public class Constants {
         public static final int ELEVATOR_ENCODER = 20;
         public static final double ELEVATORSPEED = .8;
         public static final double ELEVATORDOWN = .1;
-        public static final int L1ANGLE = 0;
-        public static final int L2ANGLE = 0;
-        public static final int L3ANGLE = 0;
-        public static final int L4ANGLE = 0;
-        public static final int BARGEANGLE = 0;            
+        public static final int L1TIME =50;
+        public static final int L2TIME = 100;
+        public static final int L3TIME = 150;
+        public static final int L4TIME = 200;
+        public static final int BARGETIME = 0;            
     }
 }

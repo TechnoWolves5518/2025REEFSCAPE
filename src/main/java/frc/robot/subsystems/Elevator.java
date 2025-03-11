@@ -65,6 +65,12 @@ public class Elevator extends SubsystemBase {
     elevateMotor1.set(TalonSRXControlMode.PercentOutput, speed/.75);
   }
 
+  public void toPosistion(int targetTick){
+    for (int i = 1; i <= targetTick; i++){
+      elevateMotor1.set(TalonSRXControlMode.PercentOutput, Constants.ElevatorConstants.ELEVATORSPEED);
+    }
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

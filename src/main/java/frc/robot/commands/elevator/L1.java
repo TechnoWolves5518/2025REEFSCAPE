@@ -19,12 +19,14 @@ public class L1 extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_elevator.elevate(Constants.ElevatorConstants.ELEVATORSPEED, Constants.ElevatorConstants.L1ANGLE);
+    m_elevator.toPosistion(Constants.ElevatorConstants.L1TIME);
   }
 
   // Called once the command ends or is interrupted.

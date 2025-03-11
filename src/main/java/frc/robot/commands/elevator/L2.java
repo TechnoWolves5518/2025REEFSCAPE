@@ -24,7 +24,7 @@ public class L2 extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_elevator.elevate(Constants.ElevatorConstants.ELEVATORSPEED, Constants.ElevatorConstants.L2ANGLE);
+    m_elevator.toPosistion(Constants.ElevatorConstants.L2TIME);
   }
 
   // Called once the command ends or is interrupted.
