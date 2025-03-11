@@ -4,34 +4,46 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj.smartdashboard.*;
-import frc.robot.generated.TunerConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.commands.*;
-import frc.robot.commands.elevator.*;
-import frc.robot.subsystems.*;
+import frc.robot.commands.Climb;
+import frc.robot.commands.Manipulate;
+import frc.robot.commands.ReverseClimb;
+import frc.robot.commands.ReverseManipulate;
+import frc.robot.commands.elevator.Down;
+import frc.robot.commands.elevator.Hold;
+import frc.robot.commands.elevator.L1;
+import frc.robot.commands.elevator.L2;
+import frc.robot.commands.elevator.L3;
+import frc.robot.commands.elevator.L4;
+import frc.robot.commands.elevator.ReturnZero;
+import frc.robot.commands.elevator.Up;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Manipulator;
 
 public class RobotContainer {
   private final Elevator elevator = new Elevator();
-  private final Encode encode = new Encode();
-  private final Climber climb = new Climber();
+  private final Climber climber = new Climber();
   private final Manipulator manipulate = new Manipulator();
-
-  // NamedCommands.registerCommand("L1", new L1(elevator));
-  // NamedCommands.registerCommand("L2", new L2(elevator));
-  // NamedCommands.registerCommand("L3", new L3(elevator));
-  // NamedCommands.registerCommand("L4", new L4(elevator));
-  // NamedCommands.registerCommand("ReturnZero", new ReturnZero(elevator));
+  private SendableChooser<Command> autoChooser;
 
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double TotalMaxSpeed = MaxSpeed * SwerveConstants.speedMultiplier; // Total maximum speed of robot
@@ -103,9 +115,8 @@ public class RobotContainer {
         //schmoXbox.pov(0).and(schmoXbox.pov(180));
         schmoXbox.leftTrigger().whileTrue(new Manipulate(manipulate));
         schmoXbox.rightTrigger().whileTrue(new ReverseManipulate(manipulate));
-        schmoXbox.leftBumper().onTrue(new TestServo(climb));
-        schmoXbox.pov(90).onTrue(new ReverseServo(climb));
-        schmoXbox.rightBumper().whileTrue(new Climb(climb));
+        schmoXbox.leftBumper().whileTrue(new ReverseClimb(climber));
+        schmoXbox.rightBumper().whileTrue(new Climb(climber));
         schmoXbox.a().onTrue(new  L1(elevator));
         schmoXbox.b().onTrue(new L2(elevator));
         schmoXbox.x().onTrue(new L3(elevator));
@@ -143,9 +154,29 @@ public class RobotContainer {
         driverXbox.x().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         drivetrain.registerTelemetry(logger::telemeterize);
+
+        boolean isComp = false;
+
+        autoChooser = AutoBuilder.buildAutoChooserWithOptionsModifier(
+          (stream) -> isComp
+          ? stream.filter(auto -> auto.getName().contains("comp"))
+          : stream
+        );
+
+        NamedCommands.registerCommand("L1", new L1(elevator));
+        NamedCommands.registerCommand("L2", new L2(elevator));
+        NamedCommands.registerCommand("L3", new L3(elevator));
+        NamedCommands.registerCommand("L4", new L4(elevator));
+        NamedCommands.registerCommand("ReturnZero", new ReturnZero(elevator));
+        NamedCommands.registerCommand("Climb", new Climb(climber));
+
+        SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
     public Command getAutonomousCommand() {
-        return Commands.print("No autonomous command configured");
+    // This method loads the auto when it is called, however, it is recommended
+    // to first load your paths/autos when code starts, then return the
+    // pre-loaded auto/path
+      return new PathPlannerAuto("Example Auto");
     }
 }

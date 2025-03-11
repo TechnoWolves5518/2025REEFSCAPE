@@ -6,9 +6,10 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import frc.robot.Constants;
+
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
@@ -21,11 +22,14 @@ public class Climber extends SubsystemBase {
   }
 
   public void setServo(int value) {
-    System.out.println("Servo Angle: " + servo.getAngle());
     servo.setAngle(value);
   }
 
-  public void climb(double speed) {
+  public void climb(double speed, int value) {
+    servo.setAngle(value);
+    for (int i = 0; i < 10; i++) { // delay
+
+    }
     climber.set(TalonSRXControlMode.PercentOutput, speed);
   }
 
