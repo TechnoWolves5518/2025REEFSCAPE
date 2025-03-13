@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.hardware.CANcoder;
 
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -19,28 +20,31 @@ public class Elevator extends SubsystemBase {
   static TalonSRX elevateMotor1;
   static TalonSRX elevateMotor2;
   static CANcoder spinReader;
+  static AnalogInput posReader;
 
   public Elevator() {
     elevateMotor1 = new TalonSRX(Constants.ElevatorConstants.ELEVATOR);
     elevateMotor2 = new TalonSRX(Constants.ElevatorConstants.ELEVATOR2);
-    spinReader = new CANcoder(Constants.ElevatorConstants.ELEVATOR_ENCODER);
+
+    posReader = new AnalogInput(0);
+    
     elevateMotor2.follow(elevateMotor1);
     elevateMotor1.setNeutralMode(NeutralMode.Brake);
     elevateMotor2.setNeutralMode(NeutralMode.Brake);
   }
 
-  public void elevate(double speed, double angle){
-    double currentAngle = spinReader.getPosition().getValue().in(Units.Degrees);
-     if (currentAngle < angle){
-        while (currentAngle < angle){
-          elevateMotor1.set(TalonSRXControlMode.PercentOutput, speed * (currentAngle/10));
-          currentAngle = spinReader.getPosition().getValue().in(Units.Degrees);
+  public void elevate(double speed, double resistance){
+    double currentResistance = posReader.getVoltage();
+     if (currentResistance < (resistance)){
+        while (currentResistance < resistance){
+          elevateMotor1.set(TalonSRXControlMode.PercentOutput, speed * (currentResistance/10));
+          currentResistance = posReader.getVoltage();
         }
       }
-      else if (currentAngle > angle){
-        while (currentAngle > angle){
-        elevateMotor1.set(TalonSRXControlMode.PercentOutput,-speed * (currentAngle/10));
-        currentAngle = spinReader.getPosition().getValue().in(Units.Degrees);
+      else if (currentResistance > resistance){
+        while (currentResistance > resistance){
+        elevateMotor1.set(TalonSRXControlMode.PercentOutput,-speed * (currentResistance/10));
+        currentResistance = posReader.getVoltage();
       }
     }
      
@@ -49,8 +53,7 @@ public class Elevator extends SubsystemBase {
 
 
   public void elevatorRead(){
-    SmartDashboard.putNumber("Elevator RAW angle", spinReader.getAbsolutePosition().getValue().in(Units.Degrees));
-    SmartDashboard.putNumber("Elevator angle", spinReader.getPosition().getValue().in(Units.Degrees));
+    SmartDashboard.putNumber("Elevator resistance", posReader.getVoltage());
   }
 
   public void adjust(double speed){
@@ -61,14 +64,15 @@ public class Elevator extends SubsystemBase {
     elevateMotor1.set(TalonSRXControlMode.PercentOutput, -.25);
   }
 
-  public void release(double speed){
-    elevateMotor1.set(TalonSRXControlMode.PercentOutput, speed/.75);
+  public void toPosition(int height){
+    int time = (int)(50 * (Math.round(height/Constants.ElevatorConstants.ELEVATOR_RATE)));
+    for (int i = 1; i <= time; i++){
+      elevateMotor1.set(TalonSRXControlMode.PercentOutput, Constants.ElevatorConstants.ELEVATOR_SPEED);
+    }
   }
 
-  public void toPosistion(int targetTick){
-    for (int i = 1; i <= targetTick; i++){
-      elevateMotor1.set(TalonSRXControlMode.PercentOutput, Constants.ElevatorConstants.ELEVATORSPEED);
-    }
+  public void release(double speed){
+    elevateMotor1.set(TalonSRXControlMode.PercentOutput, speed/.75);
   }
 
   @Override
