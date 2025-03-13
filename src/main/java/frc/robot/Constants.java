@@ -2,16 +2,17 @@ package frc.robot;
 
 public class Constants {
     public class SwerveConstants {
-        public static final double SlowSpeed = 0.1; // Speed multiplier for slow mode
+        public static final double SlowSpeed = 0.4; // Speed multiplier for slow mode
         public static final double deadband = 0.1; // Controller deadband
         public static final double speedMultiplier = 0.8; // Scaler for speed in all modes
-        public static final double SlowAngle = 0.1; // Angle multiplier for slow mode
-        public static final double SlewLimit_Drive = 0.5;
-        public static final double SlewLimit_Turn = 0.5;
+        public static final double SlowAngle = 0.4; // TIME multiplier for slow mode
+        public static final double SlewLimit_Drive = 2;
+        public static final double SlewLimit_Turn = 2;
         public static final Integer FRONT_RIGHT = 6;
         public static final Integer FRONT_LEFT = 12;
         public static final Integer BACK_RIGHT = 3;
         public static final Integer BACK_LEFT = 9;
+        public static final Double DEADBAND = 0.1;
     }
     
     public class ManipulatorConstants {
