@@ -5,7 +5,7 @@ public class Constants {
         public static final double SlowSpeed = 0.1; // Speed multiplier for slow mode
         public static final double deadband = 0.1; // Controller deadband
         public static final double speedMultiplier = 0.8; // Scaler for speed in all modes
-        public static final double SlowAngle = 0.1; // TIME multiplier for slow mode
+        public static final double SlowAngle = 0.1; // Angle multiplier for slow mode
         public static final double SlewLimit_Drive = 0.5;
         public static final double SlewLimit_Turn = 0.5;
         public static final Integer FRONT_RIGHT = 6;
@@ -15,7 +15,7 @@ public class Constants {
     }
     
     public class ManipulatorConstants {
-        public static final double MANIPULATE_SPEED  = 0.15;
+        public static final double MANIPULATE_SPEED  = 0.25;
         public static final int MANIPULATORLEFT = 15;
         public static final int MANIPULATORRIGHT = 16;
     }
@@ -32,13 +32,16 @@ public class Constants {
     public class ElevatorConstants {
         public static final int ELEVATOR = 19;
         public static final int ELEVATOR2 = 20;
-        public static final int ELEVATOR_ENCODER = 20;
-        public static final double ELEVATORSPEED = .8;
-        public static final double ELEVATORDOWN = .1;
-        public static final int L1TIME =50;
-        public static final int L2TIME = 135;
-        public static final int L3TIME = 150;
-        public static final int L4TIME = 200;
-        public static final int BARGETIME = 0;            
+        //public static final int ELEVATOR_ENCODER = 20;
+        public static final double ELEVATOR_SPEED = .8;
+        public static final double ELEVATOR_DOWN = .1;
+        public static final double SPROCKET_RADIUS = 0.606;
+        public static final double SHAFT_SPEED = ((3375.345 * .8)/60)/5.95; // Calculates the rps of the elevator output shaft
+        public static final double ELEVATOR_RATE = (2*Math.PI*SPROCKET_RADIUS) * SHAFT_SPEED; // Calculates delta height per rotation of elevator output shaft
+        // units: inches
+        public static final int L1_HEIGHT = 20;
+        public static final int L2_HEIGHT = 30;
+        public static final int L3_HEIGHT = 50;
+        public static final int L4_HEIGHT = 75;
     }
 }

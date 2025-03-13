@@ -24,7 +24,7 @@ public class L4 extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_elevator.toPosistion(Constants.ElevatorConstants.L4TIME);
+    m_elevator.toPosition(Constants.ElevatorConstants.L4_HEIGHT);
   }
 
   // Called once the command ends or is interrupted.

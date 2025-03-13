@@ -24,7 +24,7 @@ public class ReturnZero extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_elevator.elevate(Constants.ElevatorConstants.ELEVATORSPEED, 0);
+    m_elevator.elevate(Constants.ElevatorConstants.ELEVATOR_SPEED, 0);
   }
 
   // Called once the command ends or is interrupted.
