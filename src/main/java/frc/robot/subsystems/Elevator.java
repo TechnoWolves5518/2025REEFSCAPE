@@ -53,7 +53,8 @@ public class Elevator extends SubsystemBase {
 
 
   public void elevatorRead(){
-    SmartDashboard.putNumber("Elevator resistance", posReader.getVoltage());
+    SmartDashboard.putNumber("Elevator RAW resistance", spinReader.getAbsolutePosition().getValue().in(Units.Degrees));
+    SmartDashboard.putNumber("Elevator resistance", spinReader.getPosition().getValue().in(Units.Degrees));
   }
 
   public void adjust(double speed){
