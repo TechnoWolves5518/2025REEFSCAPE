@@ -36,7 +36,7 @@ public class Constants {
         public static final double ELEVATORSPEED = .8;
         public static final double ELEVATORDOWN = .1;
         public static final int L1TIME =50;
-        public static final int L2TIME = 100;
+        public static final int L2TIME = 135;
         public static final int L3TIME = 150;
         public static final int L4TIME = 200;
         public static final int BARGETIME = 0;            

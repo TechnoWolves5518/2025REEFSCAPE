@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.Climb;
@@ -156,22 +157,16 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        boolean isComp = false;
 
-        autoChooser = AutoBuilder.buildAutoChooserWithOptionsModifier(
-          (stream) -> isComp
-          ? stream.filter(auto -> auto.getName().contains("comp"))
-          : stream
-        );
-
+        // auto stuff
+        NamedCommands.registerCommand("Test", Commands.runOnce(()-> System.out.println("I work probably")));
+        NamedCommands.registerCommand("Manipulate", new Manipulate(manipulate));
         NamedCommands.registerCommand("L1", new L1(elevator));
         NamedCommands.registerCommand("L2", new L2(elevator));
         NamedCommands.registerCommand("L3", new L3(elevator));
-        NamedCommands.registerCommand("L4", new L4(elevator));
-        NamedCommands.registerCommand("ReturnZero", new ReturnZero(elevator));
-        NamedCommands.registerCommand("Climb", new Climb(climber));
 
-        SmartDashboard.putData("Auto Chooser", autoChooser);
+        autoChooser = AutoBuilder.buildAutoChooser("Test");
+        SmartDashboard.putData("Auto Mode", autoChooser);
     }
 
     public Command getAutonomousCommand() {
