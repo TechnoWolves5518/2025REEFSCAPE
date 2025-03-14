@@ -10,10 +10,10 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
+// import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Rotation2d;
+// import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,6 +24,7 @@ import frc.robot.commands.Climb;
 import frc.robot.commands.Manipulate;
 import frc.robot.commands.ReverseClimb;
 import frc.robot.commands.ReverseManipulate;
+import frc.robot.commands.autos.AutoCommands.AutoManipulate;
 import frc.robot.commands.elevator.Down;
 import frc.robot.commands.elevator.Hold;
 import frc.robot.commands.elevator.L1;
@@ -199,13 +200,16 @@ public class RobotContainer {
           : stream
         );
 
-        NamedCommands.registerCommand("L1", new L1(elevator));
-        NamedCommands.registerCommand("L2", new L2(elevator));
-        NamedCommands.registerCommand("L3", new L3(elevator));
-        NamedCommands.registerCommand("L4", new L4(elevator));
-        NamedCommands.registerCommand("ReturnZero", new ReturnZero(elevator));
-        NamedCommands.registerCommand("Climb", new Climb(climber));
+        // NamedCommands.registerCommand("L1", new L1(elevator));
+        // NamedCommands.registerCommand("L2", new L2(elevator));
+        // NamedCommands.registerCommand("L3", new L3(elevator));
+        // NamedCommands.registerCommand("L4", new L4(elevator));
+        // NamedCommands.registerCommand("ReturnZero", new ReturnZero(elevator));
+        // NamedCommands.registerCommand("Climb", new Climb(climber));
 
+        // autoChooser = AutoBuilder.buildAutoChooser("None");
+        autoChooser.setDefaultOption("Testing", new AutoManipulate(manipulate));
+        // autoChooser.addOption("Test", new AutoManipulate(manipulate));
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
