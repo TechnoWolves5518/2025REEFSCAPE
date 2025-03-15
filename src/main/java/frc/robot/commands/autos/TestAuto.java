@@ -5,7 +5,9 @@
 package frc.robot.commands.autos;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.autos.AutoCommands.AutoManipulate;
+import frc.robot.commands.autos.autoCommands.AutoManipulate;
+import frc.robot.commands.autos.autoCommands.autoElevator.AutoL3;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Manipulator;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -13,12 +15,14 @@ import frc.robot.subsystems.Manipulator;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class TestAuto extends SequentialCommandGroup {
   Manipulator m_manipulator;
+  Elevator m_Elevator;
   /** Creates a new TestAuto. */
-  public TestAuto(Manipulator m_manipulator) {
+  public TestAuto(Manipulator m_manipulator, Elevator m_Elevator) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new AutoManipulate(m_manipulator)
+      new AutoL3(m_Elevator),
+      new AutoManipulate(m_manipulator, 60)
     );
   }
 }

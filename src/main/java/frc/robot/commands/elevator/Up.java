@@ -25,7 +25,7 @@ public class Up extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_elevator.adjust(Constants.ElevatorConstants.ELEVATOR_SPEED *-1);
+    m_elevator.adjust(Constants.ElevatorConstants.ELEVATOR_SPEED);
   }
 
   // Called once the command ends or is interrupted.

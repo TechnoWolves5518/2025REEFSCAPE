@@ -34,11 +34,13 @@ public class Constants {
         public static final int ELEVATOR = 19;
         public static final int ELEVATOR2 = 20;
         //public static final int ELEVATOR_ENCODER = 20;
-        public static final double ELEVATOR_SPEED = .8;
+        public static final double ELEVATOR_SPEED = -.8;
         public static final double ELEVATOR_DOWN = .1;
         public static final double SPROCKET_RADIUS = 0.606;
         public static final double SHAFT_SPEED = ((3375.345 * .8)/60)/5.95; // Calculates the rps of the elevator output shaft
+        public static final double SHAFT_SPEED_DOWN = ((3375.345 * .1)/60)/5.95; // Calculates the rps of the elevator output shaft
         public static final double ELEVATOR_RATE = (2*Math.PI*SPROCKET_RADIUS) * SHAFT_SPEED; // Calculates delta height per rotation of elevator output shaft
+        public static final double ELEVATOR_RATE_DOWN = (2*Math.PI*SPROCKET_RADIUS) * SHAFT_SPEED_DOWN; // Calculates delta height per rotation of elevator output shaft
         // units: inches
         public static final int L1_HEIGHT = 20;
         public static final int L2_HEIGHT = 30;
