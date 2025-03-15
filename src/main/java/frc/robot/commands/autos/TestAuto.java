@@ -26,7 +26,8 @@ public class TestAuto extends SequentialCommandGroup {
       new FollowPath("Example Path"),
       new AutoL3(m_elevator),
       new AutoManipulate(m_manipulator, 60),
-      new AutoDown(m_elevator, Constants.ElevatorConstants.L3_HEIGHT)
+      new AutoDown(m_elevator, Constants.ElevatorConstants.L3_HEIGHT),
+      new FollowPath("Back Up")
     );
   }
 }
