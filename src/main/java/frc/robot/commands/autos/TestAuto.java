@@ -5,8 +5,10 @@
 package frc.robot.commands.autos;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants;
 import frc.robot.commands.autos.autoCommands.AutoManipulate;
 import frc.robot.commands.autos.autoCommands.autoElevator.AutoL3;
+import frc.robot.commands.autos.autoCommands.autoElevator.AutoDown;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Manipulator;
 
@@ -15,14 +17,16 @@ import frc.robot.subsystems.Manipulator;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class TestAuto extends SequentialCommandGroup {
   Manipulator m_manipulator;
-  Elevator m_Elevator;
+  Elevator m_elevator;
   /** Creates a new TestAuto. */
-  public TestAuto(Manipulator m_manipulator, Elevator m_Elevator) {
+  public TestAuto(Manipulator m_manipulator, Elevator m_elevator) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new AutoL3(m_Elevator),
-      new AutoManipulate(m_manipulator, 60)
+      new FollowPath("Example Path"),
+      new AutoL3(m_elevator),
+      new AutoManipulate(m_manipulator, 60),
+      new AutoDown(m_elevator, Constants.ElevatorConstants.L3_HEIGHT)
     );
   }
 }

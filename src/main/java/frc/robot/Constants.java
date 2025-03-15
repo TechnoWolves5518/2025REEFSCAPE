@@ -1,7 +1,24 @@
 package frc.robot;
 
+import java.io.IOException;
+
+import org.json.simple.parser.ParseException;
+
+import com.pathplanner.lib.config.RobotConfig;
+
 public class Constants {
+    
     public class SwerveConstants {
+        public static RobotConfig config;
+        static {
+            RobotConfig tempConfig = null;
+            try {
+                tempConfig = RobotConfig.fromGUISettings();
+            } catch (IOException | ParseException e) {
+                e.printStackTrace();
+            }
+            config = tempConfig;
+        }
         public static final double SlowSpeed = 0.4; // Speed multiplier for slow mode
         public static final double deadband = 0.1; // Controller deadband
         public static final double speedMultiplier = 0.8; // Scaler for speed in all modes
@@ -14,6 +31,7 @@ public class Constants {
         public static final Integer BACK_LEFT = 9;
         public static final Double DEADBAND = 0.1;
     }
+
     
     public class ManipulatorConstants {
         public static final double MANIPULATE_SPEED  = 0.25;
@@ -47,4 +65,7 @@ public class Constants {
         public static final int L3_HEIGHT = 50;
         public static final int L4_HEIGHT = 75;
     }
+
+
+    
 }
