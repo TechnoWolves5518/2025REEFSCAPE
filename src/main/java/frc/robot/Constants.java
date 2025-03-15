@@ -40,7 +40,7 @@ public class Constants {
     }
     
     public class ClimberConstants {
-        public static final double CLIMB_SPEED  = 1;
+        public static final double CLIMB_SPEED  = .6;
         public static final double REVERSE_CLIMB_SPEED = -0.125;
         public static final int CLIMBER = 17;
         public static final Integer SERVO_NUMBER = 1;

@@ -210,7 +210,7 @@ public class RobotContainer {
 
         // autoChooser = AutoBuilder.buildAutoChooser("None");
         autoChooser.setDefaultOption("Testing", new AutoManipulate(manipulate, 60));
-        autoChooser.addOption("Test", new TestAuto(manipulate, elevator));
+        autoChooser.addOption("TestAuto", new TestAuto(manipulate, elevator));
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
