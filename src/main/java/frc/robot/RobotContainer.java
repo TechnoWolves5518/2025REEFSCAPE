@@ -143,10 +143,10 @@ public class RobotContainer {
         schmoXbox.rightTrigger().whileTrue(new ReverseManipulate(manipulate));
         schmoXbox.leftBumper().whileTrue(new ReverseClimb(climber));
         schmoXbox.rightBumper().whileTrue(new Climb(climber));
-        // schmoXbox.a().onTrue(new  L1(elevator));
-        // schmoXbox.b().onTrue(new L2(elevator));
-        // schmoXbox.x().onTrue(new L3(elevator));
-        // schmoXbox.y().onTrue(new L4(elevator));
+        schmoXbox.a().onTrue(new  L1(elevator));
+        schmoXbox.b().onTrue(new L2(elevator));
+        schmoXbox.x().onTrue(new L3(elevator));
+        schmoXbox.y().onTrue(new L4(elevator));
         schmoXbox.back().onTrue(new ReturnZero(elevator));
         driverXbox.start().whileTrue(drivetrain.applyRequest(() -> brake));
 
