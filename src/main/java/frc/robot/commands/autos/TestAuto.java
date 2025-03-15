@@ -9,6 +9,7 @@ import frc.robot.Constants;
 import frc.robot.commands.autos.autoCommands.AutoManipulate;
 import frc.robot.commands.autos.autoCommands.autoElevator.AutoL3;
 import frc.robot.commands.autos.autoCommands.autoElevator.AutoDown;
+import frc.robot.commands.autos.autoCommands.autoElevator.AutoL1;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Manipulator;
 
@@ -24,9 +25,9 @@ public class TestAuto extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new FollowPath("Example Path"),
-      new AutoL3(m_elevator),
+      new AutoL1(m_elevator),
       new AutoManipulate(m_manipulator, 60),
-      new AutoDown(m_elevator, Constants.ElevatorConstants.L3_HEIGHT),
+      new AutoDown(m_elevator, Constants.ElevatorConstants.L1_HEIGHT),
       new FollowPath("Back Up")
     );
   }
