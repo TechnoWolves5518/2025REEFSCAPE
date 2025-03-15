@@ -6,10 +6,6 @@ package frc.robot.commands.autos;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
-import frc.robot.commands.autos.autoCommands.AutoManipulate;
-import frc.robot.commands.autos.autoCommands.autoElevator.AutoL3;
-import frc.robot.commands.autos.autoCommands.autoElevator.AutoDown;
-import frc.robot.commands.autos.autoCommands.autoElevator.AutoL1;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Manipulator;
 
@@ -24,11 +20,11 @@ public class TestAuto extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new FollowPath("Example Path"),
-      new AutoL1(m_elevator),
-      new AutoManipulate(m_manipulator, 60),
-      new AutoDown(m_elevator, Constants.ElevatorConstants.L1_HEIGHT),
-      new FollowPath("Back Up")
+      new FollowPath("Example Path", 150)
+      // new AutoL1(m_elevator),
+      // new AutoManipulate(m_manipulator, 100),
+      // new AutoDown(m_elevator, Constants.ElevatorConstants.L1_HEIGHT),
+      // new FollowPath("Back Up")
     );
   }
 }

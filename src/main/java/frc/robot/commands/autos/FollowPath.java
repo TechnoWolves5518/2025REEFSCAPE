@@ -11,24 +11,36 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 public class FollowPath extends Command {
   /** Creates a new FollowPath. */
   String pathName;
-  public FollowPath(String pathName) {
+  int timer;
+  int time;
+  boolean stopCheck;
+  public FollowPath(String pathName, int time) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.pathName = pathName;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    timer = 0;
+    stopCheck = false;
+    CommandSwerveDrivetrain.followPath(pathName);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    CommandSwerveDrivetrain.followPath(pathName);
+    if (timer < time) {
+      timer++;
+    } else {
+      stopCheck = true;
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
