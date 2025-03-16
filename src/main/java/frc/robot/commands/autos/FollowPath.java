@@ -16,6 +16,7 @@ public class FollowPath extends Command {
   boolean stopCheck;
   public FollowPath(String pathName, int time) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.time = time;
     this.pathName = pathName;
   }
 
