@@ -22,7 +22,7 @@ public class TestAuto extends SequentialCommandGroup {
     this.m_elevator = m_elevator;
     this.m_manipulator = m_manipulator;
     addCommands(
-      new FollowPath("Example Path", 150)
+      new FollowPath("Forward")
       // new AutoL1(m_elevator),
       // new AutoManipulate(m_manipulator, 100),
       // new AutoDown(m_elevator, Constants.ElevatorConstants.L1_HEIGHT),

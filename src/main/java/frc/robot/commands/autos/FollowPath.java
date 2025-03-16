@@ -11,31 +11,31 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 public class FollowPath extends Command {
   /** Creates a new FollowPath. */
   String pathName;
-  int timer;
-  int time;
-  boolean stopCheck;
-  public FollowPath(String pathName, int time) {
+  // int timer;
+  // int time;
+  // boolean stopCheck;
+  public FollowPath(String pathName) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.time = time;
+    // this.time = time;
     this.pathName = pathName;
+    CommandSwerveDrivetrain.followPath(pathName);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timer = 0;
-    stopCheck = false;
-    CommandSwerveDrivetrain.followPath(pathName);
+    // timer = 0;
+    // stopCheck = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (timer < time) {
-      timer++;
-    } else {
-      stopCheck = true;
-    }
+    // if (timer < time) {
+    //   timer++;
+    // } else {
+    //   stopCheck = true;
+    // }
   }
 
   // Called once the command ends or is interrupted.
@@ -46,6 +46,6 @@ public class FollowPath extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return stopCheck;
+    return false;
   }
 }
