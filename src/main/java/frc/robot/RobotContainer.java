@@ -25,6 +25,8 @@ import frc.robot.commands.Manipulate;
 import frc.robot.commands.ReverseClimb;
 import frc.robot.commands.ReverseManipulate;
 import frc.robot.commands.autos.AutoManipulate;
+import frc.robot.commands.autos.ElevatorControl;
+import frc.robot.commands.autos.FollowPath;
 import frc.robot.commands.autos.TestAuto;
 import frc.robot.commands.elevator.Down;
 import frc.robot.commands.elevator.Hold;
@@ -211,6 +213,8 @@ public class RobotContainer {
         // autoChooser = AutoBuilder.buildAutoChooser("None");
         autoChooser.setDefaultOption("Testing", new AutoManipulate(manipulate, 60));
         autoChooser.addOption("TestAuto", new TestAuto(manipulate, elevator));
+        autoChooser.addOption("Elevator Control", new ElevatorControl(elevator));
+        autoChooser.addOption("Move Forward", new FollowPath("Forward", 100));
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 

@@ -333,16 +333,16 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
     }
 
-    public static Command followPath(String pathName) {
+    public static void followPath(String pathName) {
         try{
             // Load the path you want to follow using its name in the GUI
             PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
     
             // Create a path following command using AutoBuilder. This will also trigger event markers.
-            return AutoBuilder.followPath(path);
+            AutoBuilder.followPath(path);
         } catch (Exception e) {
             DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
-            return Commands.none();
+            Commands.none();
         }
     }
 

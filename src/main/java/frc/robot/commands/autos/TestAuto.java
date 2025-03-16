@@ -19,6 +19,8 @@ public class TestAuto extends SequentialCommandGroup {
   public TestAuto(Manipulator m_manipulator, Elevator m_elevator) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+    this.m_elevator = m_elevator;
+    this.m_manipulator = m_manipulator;
     addCommands(
       new FollowPath("Example Path", 150)
       // new AutoL1(m_elevator),
