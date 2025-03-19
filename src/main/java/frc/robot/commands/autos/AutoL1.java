@@ -31,7 +31,7 @@ public class AutoL1 extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_elevator.adjust(0);
+    m_elevator.hold();
   }
 
   // Returns true when the command should end.

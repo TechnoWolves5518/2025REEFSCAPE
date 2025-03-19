@@ -65,15 +65,18 @@ public class Elevator extends SubsystemBase {
     elevateMotor1.set(TalonSRXControlMode.PercentOutput, -.25);
   }
 
-  public void toPosition(int height){
-    int time = (int)(50 * (Math.round(height/Constants.ElevatorConstants.ELEVATOR_RATE)));
-    for (int i = 1; i <= time; i++){
-      elevateMotor1.set(TalonSRXControlMode.PercentOutput, Constants.ElevatorConstants.ELEVATOR_SPEED);
-    }
+  public boolean toPosition(int height){
+    
+    return true;
   }
 
   public void release(double speed){
     elevateMotor1.set(TalonSRXControlMode.PercentOutput, speed/.75);
+  }
+
+  public void getCurrentVoltage() {
+    double curVolt = posReader.getVoltage(); 
+    System.out.println("Current Voltage: " + curVolt);
   }
 
   @Override

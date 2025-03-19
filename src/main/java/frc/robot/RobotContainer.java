@@ -24,16 +24,17 @@ import frc.robot.commands.Climb;
 import frc.robot.commands.Manipulate;
 import frc.robot.commands.ReverseClimb;
 import frc.robot.commands.ReverseManipulate;
+import frc.robot.commands.getCurrentVoltage;
 import frc.robot.commands.autos.AutoManipulate;
 import frc.robot.commands.autos.ElevatorControl;
 import frc.robot.commands.autos.FollowPath;
 import frc.robot.commands.autos.TestAuto;
 import frc.robot.commands.elevator.Down;
 import frc.robot.commands.elevator.Hold;
-// import frc.robot.commands.elevator.L1;
-// import frc.robot.commands.elevator.L2;
-// import frc.robot.commands.elevator.L3;
-// import frc.robot.commands.elevator.L4;
+import frc.robot.commands.elevator.L1;
+import frc.robot.commands.elevator.L2;
+import frc.robot.commands.elevator.L3;
+import frc.robot.commands.elevator.L4;
 import frc.robot.commands.elevator.ReturnZero;
 import frc.robot.commands.elevator.Up;
 import frc.robot.generated.TunerConstants;
@@ -141,18 +142,19 @@ public class RobotContainer {
         schmoXbox.pov(0).whileTrue(new Up(elevator)).whileFalse(new Hold(elevator));
         schmoXbox.pov(180).whileTrue(new Down(elevator)).whileFalse(new Hold(elevator));
         //schmoXbox.pov(0).and(schmoXbox.pov(180));
-        schmoXbox.leftTrigger().whileTrue(new Manipulate(manipulate));
-        schmoXbox.rightTrigger().whileTrue(new ReverseManipulate(manipulate));
+        schmoXbox.rightTrigger().whileTrue(new Manipulate(manipulate));
+        schmoXbox.leftTrigger().whileTrue(new ReverseManipulate(manipulate));
         schmoXbox.leftBumper().whileTrue(new ReverseClimb(climber));
         schmoXbox.rightBumper().whileTrue(new Climb(climber));
-        // schmoXbox.a().onTrue(new  L1(elevator));
-        // schmoXbox.b().onTrue(new L2(elevator));
-        // schmoXbox.x().onTrue(new L3(elevator));
-        // schmoXbox.y().onTrue(new L4(elevator));
+        schmoXbox.a().onTrue(new  L1(elevator));
+        schmoXbox.b().onTrue(new L2(elevator));
+        schmoXbox.x().onTrue(new L3(elevator));
+        schmoXbox.y().onTrue(new L4(elevator));
         schmoXbox.back().onTrue(new ReturnZero(elevator));
         driverXbox.start().whileTrue(drivetrain.applyRequest(() -> brake));
+        driverXbox.leftTrigger().whileTrue(new getCurrentVoltage(elevator));
 
-        // When the left trigger on driver xbox controller is pressed, drive in slow mode.
+        // When the left trig ger on driver xbox controller is pressed, drive in slow mode.
         driverXbox.leftTrigger().whileTrue(drivetrain.applyRequest(() ->
         drive.withVelocityX(-driverLeftYLimited() * TotalMaxSpeed * Constants.SwerveConstants.SlowSpeed) // Drive forward with negative Y (forward)
             .withVelocityY(-driverLeftXLimited() * TotalMaxSpeed * Constants.SwerveConstants.SlowSpeed) // Drive left with negative X (left)
