@@ -9,7 +9,6 @@ import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.hardware.CANcoder;
 
-import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -55,10 +54,13 @@ public class Elevator extends SubsystemBase {
   }
 
 
+  public Double getCurrentVoltage() {
+    return posReader.getVoltage();
+  }
+
 
   public void elevatorRead(){
-    SmartDashboard.putNumber("Elevator RAW resistance", spinReader.getAbsolutePosition().getValue().in(Units.Degrees));
-    SmartDashboard.putNumber("Elevator resistance", spinReader.getPosition().getValue().in(Units.Degrees));
+    SmartDashboard.putNumber("Elevator Pos: ", posReader.getVoltage());
   }
 
   public void adjust(double speed){
@@ -76,11 +78,6 @@ public class Elevator extends SubsystemBase {
 
   public void release(double speed){
     elevateMotor1.set(TalonSRXControlMode.PercentOutput, speed/.75);
-  }
-
-  public void getCurrentVoltage() {
-    double curVolt = posReader.getVoltage(); 
-    System.out.println("Current Voltage: " + curVolt);
   }
 
   @Override

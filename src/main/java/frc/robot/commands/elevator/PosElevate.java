@@ -9,12 +9,13 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Elevator;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class PosElevateDown extends Command {
+public class PosElevate extends Command {
   /** Creates a new PosElevare. */
   Elevator m_elevator;
   Boolean stopCheck;
   Double resistance;
-  public PosElevateDown(Elevator m_elevator, Double resistance) {
+  Double inital;
+  public PosElevate(Elevator m_elevator, Double resistance) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.resistance = resistance;
     this.m_elevator = m_elevator;
@@ -25,12 +26,17 @@ public class PosElevateDown extends Command {
   @Override
   public void initialize() {
     stopCheck = false;
+    inital = m_elevator.getCurrentVoltage();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    stopCheck = m_elevator.elevateUp(Constants.ElevatorConstants.ELEVATOR_SPEED, resistance);
+    if (inital < resistance){
+      stopCheck = m_elevator.elevateUp(Constants.ElevatorConstants.ELEVATOR_SPEED, resistance);
+    } else if (inital > resistance){
+      stopCheck = m_elevator.elevateDown(Constants.ElevatorConstants.ELEVATOR_DOWN, resistance);
+    }
   }
 
   // Called once the command ends or is interrupted.

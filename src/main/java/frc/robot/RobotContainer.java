@@ -34,7 +34,7 @@ import frc.robot.commands.elevator.L1;
 import frc.robot.commands.elevator.L2;
 import frc.robot.commands.elevator.L3;
 import frc.robot.commands.elevator.L4;
-import frc.robot.commands.elevator.PosElevateDown;
+import frc.robot.commands.elevator.PosElevate;
 import frc.robot.commands.elevator.Up;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climber;
@@ -152,7 +152,7 @@ public class RobotContainer {
         schmoXbox.b().onTrue(new L2(elevator));
         schmoXbox.x().onTrue(new L3(elevator));
         schmoXbox.y().onTrue(new L4(elevator));
-        schmoXbox.back().onTrue(new PosElevateDown(elevator, Constants.ElevatorConstants.V0));
+        schmoXbox.back().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.V0));
         driverXbox.start().whileTrue(drivetrain.applyRequest(() -> brake));
         driverXbox.leftTrigger().whileTrue(new getCurrentVoltage(elevator));
 
