@@ -27,7 +27,6 @@ import frc.robot.commands.ReverseManipulate;
 import frc.robot.commands.getCurrentVoltage;
 import frc.robot.commands.autos.AutoManipulate;
 import frc.robot.commands.autos.ElevatorControl;
-import frc.robot.commands.autos.FollowPath;
 import frc.robot.commands.autos.TestAuto;
 import frc.robot.commands.elevator.Down;
 import frc.robot.commands.elevator.Hold;
@@ -35,7 +34,7 @@ import frc.robot.commands.elevator.L1;
 import frc.robot.commands.elevator.L2;
 import frc.robot.commands.elevator.L3;
 import frc.robot.commands.elevator.L4;
-import frc.robot.commands.elevator.ReturnZero;
+import frc.robot.commands.elevator.PosElevateDown;
 import frc.robot.commands.elevator.Up;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climber;
@@ -47,7 +46,9 @@ public class RobotContainer {
   private final Climber climber = new Climber();
   private final Manipulator manipulate = new Manipulator();
   private SendableChooser<Command> autoChooser;
+  @SuppressWarnings("unused")
   private double speedMultiplier = 1;
+  @SuppressWarnings("unused")
   private double angleMultiplier = 1;
 
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -64,6 +65,7 @@ public class RobotContainer {
             .withDeadband(MaxSpeed * SwerveConstants.deadband).withRotationalDeadband(MaxAngularRate * SwerveConstants.deadband)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+    @SuppressWarnings("unused")
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
@@ -150,7 +152,7 @@ public class RobotContainer {
         schmoXbox.b().onTrue(new L2(elevator));
         schmoXbox.x().onTrue(new L3(elevator));
         schmoXbox.y().onTrue(new L4(elevator));
-        schmoXbox.back().onTrue(new ReturnZero(elevator));
+        schmoXbox.back().onTrue(new PosElevateDown(elevator, Constants.ElevatorConstants.V0));
         driverXbox.start().whileTrue(drivetrain.applyRequest(() -> brake));
         driverXbox.leftTrigger().whileTrue(new getCurrentVoltage(elevator));
 

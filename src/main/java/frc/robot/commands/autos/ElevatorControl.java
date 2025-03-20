@@ -5,6 +5,7 @@
 package frc.robot.commands.autos;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.elevator.L2;
 import frc.robot.subsystems.Elevator;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -18,7 +19,7 @@ public class ElevatorControl extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     this.m_elevator = m_elevator;
     addCommands(
-      new AutoL2(m_elevator)
+      new L2(m_elevator)
     );
   }
 }

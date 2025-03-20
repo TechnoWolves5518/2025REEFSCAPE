@@ -4,7 +4,6 @@
 
 package frc.robot.commands.elevator;
 
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
