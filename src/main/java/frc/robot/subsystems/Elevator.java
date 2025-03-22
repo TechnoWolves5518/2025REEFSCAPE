@@ -34,21 +34,23 @@ public class Elevator extends SubsystemBase {
 
   public boolean elevateUp(double speed, double resistance){
     double currentResistance = posReader.getVoltage();
-     if (currentResistance < (resistance)){
-          elevateMotor1.set(TalonSRXControlMode.PercentOutput, speed * (currentResistance/10));
-          return false;
-      }
-      else{
-        return true;
-      }
+    System.out.println("Current Resistance: " + currentResistance);
+    if (currentResistance > (resistance)){
+      elevateMotor1.set(TalonSRXControlMode.PercentOutput, speed * (currentResistance/10));
+      return false;
+    }
+    else {
+      return true;
+    }
   }
-
+  
   public boolean elevateDown(double speed, double resistance){
     double currentResistance = posReader.getVoltage();
-    if (currentResistance > resistance){
-      elevateMotor1.set(TalonSRXControlMode.PercentOutput, -speed * (currentResistance/10));  
+    System.out.println("Current Resistance: " + currentResistance);
+    if (currentResistance < resistance){
+      elevateMotor1.set(TalonSRXControlMode.PercentOutput, speed * (currentResistance/10));  
       return false;
-    } else{
+    } else {
       return true;
     }
   }
@@ -61,6 +63,7 @@ public class Elevator extends SubsystemBase {
 
   public void elevatorRead(){
     SmartDashboard.putNumber("Elevator Pos: ", posReader.getVoltage());
+    SmartDashboard.updateValues();
   }
 
   public void adjust(double speed){

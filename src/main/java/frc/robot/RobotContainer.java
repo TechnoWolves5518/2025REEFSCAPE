@@ -54,36 +54,36 @@ public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double TotalMaxSpeed = MaxSpeed * SwerveConstants.speedMultiplier; // Total maximum speed of robot
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-
+    
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * SwerveConstants.deadband).withRotationalDeadband(MaxAngularRate * SwerveConstants.deadband) // Add a 10% deadband
+    .withDeadband(MaxSpeed * SwerveConstants.deadband).withRotationalDeadband(MaxAngularRate * SwerveConstants.deadband) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
 
     private final SwerveRequest.RobotCentric driveRobot = new SwerveRequest.RobotCentric()
             .withDeadband(MaxSpeed * SwerveConstants.deadband).withRotationalDeadband(MaxAngularRate * SwerveConstants.deadband)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    @SuppressWarnings("unused")
-    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-    private final Telemetry logger = new Telemetry(MaxSpeed);
-
-    private final CommandXboxController driverXbox = new CommandXboxController(0);
-    private final CommandJoystick driverJoystick = new CommandJoystick(2);
-    private final CommandXboxController schmoXbox = new CommandXboxController(1);
-
-    SlewRateLimiter driverLeftXLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
-    SlewRateLimiter driverLeftYLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
-    SlewRateLimiter driverRightXLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Turn);
-    SlewRateLimiter driverRightYLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Turn);
-    SlewRateLimiter joystickXLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
-    SlewRateLimiter joystickYLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
-    SlewRateLimiter joystickZLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Turn);
-      
-    // Functions to get the slew rate limited values of the joysticks
-    double driverLeftXLimited() {
-      return driverLeftXLimiter.calculate(driverXbox.getLeftX());
+            private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+            @SuppressWarnings("unused")
+            private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+            private final Telemetry logger = new Telemetry(MaxSpeed);
+            
+            private final CommandXboxController driverXbox = new CommandXboxController(0);
+            private final CommandJoystick driverJoystick = new CommandJoystick(2);
+            private final CommandXboxController schmoXbox = new CommandXboxController(1);
+            
+            SlewRateLimiter driverLeftXLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
+            SlewRateLimiter driverLeftYLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
+            SlewRateLimiter driverRightXLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Turn);
+            SlewRateLimiter driverRightYLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Turn);
+            SlewRateLimiter joystickXLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
+            SlewRateLimiter joystickYLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
+            SlewRateLimiter joystickZLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Turn);
+            
+            // Functions to get the slew rate limited values of the joysticks
+            double driverLeftXLimited() {
+              return driverLeftXLimiter.calculate(driverXbox.getLeftX());
     }
     double driverLeftYLimited() {
       return driverLeftYLimiter.calculate(driverXbox.getLeftY());
@@ -109,14 +109,14 @@ public class RobotContainer {
 
     public RobotContainer() {
         configureBindings();
-    }
- 
-
-    public void configureJoysticks() {
-      if(driverJoystick.isConnected()) {
-        drivetrain.setDefaultCommand(
-          // Drivetrain will execute this command periodically
-          drivetrain.applyRequest(() ->
+      }
+      
+      
+      public void configureJoysticks() {
+        if(driverJoystick.isConnected()) {
+          drivetrain.setDefaultCommand(
+            // Drivetrain will execute this command periodically
+            drivetrain.applyRequest(() ->
           drive.withVelocityX(-joystickYLimited() * TotalMaxSpeed) // Drive forward with negative Y (forward)
               .withVelocityY(-joystickXLimited() * TotalMaxSpeed) // Drive left with negative X (left)
               .withRotationalRate(-joystickTLimited() * MaxAngularRate) // Drive counterclockwise with negative X (left)
@@ -148,13 +148,18 @@ public class RobotContainer {
         schmoXbox.leftTrigger().whileTrue(new ReverseManipulate(manipulate));
         schmoXbox.leftBumper().whileTrue(new ReverseClimb(climber));
         schmoXbox.rightBumper().whileTrue(new Climb(climber));
-        schmoXbox.a().onTrue(new  L1(elevator));
-        schmoXbox.b().onTrue(new L2(elevator));
-        schmoXbox.x().onTrue(new L3(elevator));
-        schmoXbox.y().onTrue(new L4(elevator));
+        // schmoXbox.a().onTrue(new  L1(elevator));
+        // schmoXbox.b().onTrue(new L2(elevator));
+        // schmoXbox.x().onTrue(new L3(elevator));
+        // schmoXbox.y().onTrue(new L4(elevator));
         schmoXbox.back().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.V0));
+        schmoXbox.a().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L1_V));
+        schmoXbox.b().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L2_V));
+        schmoXbox.x().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L3_V));
+        schmoXbox.y().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L4_V));
         driverXbox.start().whileTrue(drivetrain.applyRequest(() -> brake));
         driverXbox.leftTrigger().whileTrue(new getCurrentVoltage(elevator));
+
 
         // When the left trig ger on driver xbox controller is pressed, drive in slow mode.
         driverXbox.leftTrigger().whileTrue(drivetrain.applyRequest(() ->

@@ -67,9 +67,9 @@ public class Constants {
         public static final int L4_HEIGHT = 75;
 
         // units: volts
-        public static final double V0 = 3.188;
+        public static final double V0 = 3.14;
         public static final double L1_V = 0.0;
-        public static final double L2_V = 2.274;
+        public static final double L2_V = 1.0;
         public static final double L3_V = 0.0;
         public static final double L4_V = 0.0;
 
