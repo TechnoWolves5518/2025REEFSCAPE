@@ -69,7 +69,7 @@ public class Constants {
         // units: volts
         public static final double V0 = 3.14;
         public static final double L1_V = 0.0;
-        public static final double L2_V = 2.0;
+        public static final double L2_V = 1.0;
         public static final double L3_V = 0.0;
         public static final double L4_V = 0.0;
 
