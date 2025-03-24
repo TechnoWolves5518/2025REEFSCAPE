@@ -152,11 +152,11 @@ public class RobotContainer {
         // schmoXbox.b().onTrue(new L2(elevator));
         // schmoXbox.x().onTrue(new L3(elevator));
         // schmoXbox.y().onTrue(new L4(elevator));
-        schmoXbox.back().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.V0));
-        schmoXbox.a().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L1_V));
-        schmoXbox.b().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L2_V));
-        schmoXbox.x().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L3_V));
-        schmoXbox.y().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L4_V));
+        schmoXbox.back().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.V0)).onFalse(new Hold(elevator));
+        schmoXbox.a().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L1_V)).onFalse(new Hold(elevator));
+        schmoXbox.b().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L2_V)).onFalse(new Hold(elevator));
+        schmoXbox.x().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L3_V)).onFalse(new Hold(elevator));
+        schmoXbox.y().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L4_V)).onFalse(new Hold(elevator));
         driverXbox.start().whileTrue(drivetrain.applyRequest(() -> brake));
         driverXbox.leftTrigger().whileTrue(new getCurrentVoltage(elevator));
 
