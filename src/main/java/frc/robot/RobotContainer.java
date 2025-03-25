@@ -30,10 +30,6 @@ import frc.robot.commands.autos.ElevatorControl;
 import frc.robot.commands.autos.TestAuto;
 import frc.robot.commands.elevator.Down;
 import frc.robot.commands.elevator.Hold;
-import frc.robot.commands.elevator.L1;
-import frc.robot.commands.elevator.L2;
-import frc.robot.commands.elevator.L3;
-import frc.robot.commands.elevator.L4;
 import frc.robot.commands.elevator.PosElevate;
 import frc.robot.commands.elevator.Up;
 import frc.robot.generated.TunerConstants;
@@ -148,10 +144,6 @@ public class RobotContainer {
         schmoXbox.leftTrigger().whileTrue(new ReverseManipulate(manipulate));
         schmoXbox.leftBumper().whileTrue(new ReverseClimb(climber));
         schmoXbox.rightBumper().whileTrue(new Climb(climber));
-        // schmoXbox.a().onTrue(new  L1(elevator));
-        // schmoXbox.b().onTrue(new L2(elevator));
-        // schmoXbox.x().onTrue(new L3(elevator));
-        // schmoXbox.y().onTrue(new L4(elevator));
         schmoXbox.back().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.V0));
         schmoXbox.a().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L1_V));
         schmoXbox.b().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L2_V));
@@ -212,15 +204,7 @@ public class RobotContainer {
           : stream
         );
 
-        // NamedCommands.registerCommand("L1", new L1(elevator));
-        // NamedCommands.registerCommand("L2", new L2(elevator));
-        // NamedCommands.registerCommand("L3", new L3(elevator));
-        // NamedCommands.registerCommand("L4", new L4(elevator));
-        // NamedCommands.registerCommand("ReturnZero", new ReturnZero(elevator));
-        // NamedCommands.registerCommand("Climb", new Climb(climber));
-
-        // autoChooser = AutoBuilder.buildAutoChooser("None");
-        autoChooser.setDefaultOption("Testing", new AutoManipulate(manipulate, 60));
+                autoChooser.setDefaultOption("Testing", new AutoManipulate(manipulate, 60));
         autoChooser.addOption("TestAuto", new TestAuto(manipulate, elevator));
         autoChooser.addOption("Elevator Control", new ElevatorControl(elevator));
         autoChooser.addOption("Move Forward 3", (Command)(CommandSwerveDrivetrain.followPath("New Forward")));

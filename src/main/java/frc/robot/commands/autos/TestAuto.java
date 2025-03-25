@@ -6,7 +6,8 @@ package frc.robot.commands.autos;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.elevator.L1;
+import frc.robot.Constants;
+import frc.robot.commands.elevator.PosElevate;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Manipulator;
@@ -25,8 +26,9 @@ public class TestAuto extends SequentialCommandGroup {
     this.m_manipulator = m_manipulator;
     addCommands(
       (Command)(CommandSwerveDrivetrain.followPath("New Forward")),
-      (Command)(CommandSwerveDrivetrain.followPath("Rotate"))
-      // new L1(m_elevator)
+      new PosElevate(m_elevator, Constants.ElevatorConstants.L1_V),
+      new AutoManipulate(m_manipulator, 50),
+      new PosElevate(m_elevator, Constants.ElevatorConstants.V0)
     );
   }
 }
