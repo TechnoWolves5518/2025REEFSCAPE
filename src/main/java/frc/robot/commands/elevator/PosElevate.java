@@ -34,11 +34,11 @@ public class PosElevate extends Command {
   public void execute() {
     
     if (inital < resistance){
-      while (stopCheck) {
+      while (stopCheck == false) {
         stopCheck = m_elevator.elevateDown(Constants.ElevatorConstants.ELEVATOR_DOWN, resistance);
       }
     } else if (inital > resistance){
-      while (stopCheck){
+      while (stopCheck == false){
         stopCheck = m_elevator.elevateUp(Constants.ElevatorConstants.ELEVATOR_SPEED, resistance);
       }
     }
