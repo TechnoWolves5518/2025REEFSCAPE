@@ -207,7 +207,7 @@ public class RobotContainer {
                 autoChooser.setDefaultOption("Testing", new AutoManipulate(manipulate, 60));
         autoChooser.addOption("TestAuto", new TestAuto(manipulate, elevator));
         autoChooser.addOption("Elevator Control", new ElevatorControl(elevator));
-        autoChooser.addOption("Move Forward 3", (Command)(CommandSwerveDrivetrain.followPath("New Forward")));
+        autoChooser.addOption("Taxi", (Command)(CommandSwerveDrivetrain.followPath("New Forward")));
         // autoChooser.addOption("Move Forward 2", new FollowPath("NEw Forward"));
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
