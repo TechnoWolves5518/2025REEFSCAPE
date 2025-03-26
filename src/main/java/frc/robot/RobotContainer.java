@@ -144,13 +144,13 @@ public class RobotContainer {
         schmoXbox.leftTrigger().whileTrue(new ReverseManipulate(manipulate));
         schmoXbox.leftBumper().whileTrue(new ReverseClimb(climber));
         schmoXbox.rightBumper().whileTrue(new Climb(climber));
-        schmoXbox.back().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.V0));
-        schmoXbox.a().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L1_V));
-        schmoXbox.b().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L2_V));
-        schmoXbox.x().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L3_V));
-        schmoXbox.y().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L4_V));
+        schmoXbox.back().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.V0)).onFalse(new Hold(elevator));
+        schmoXbox.a().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L1_V)).onFalse(new Hold(elevator));
+        schmoXbox.b().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L2_V)).onFalse(new Hold(elevator));
+        schmoXbox.x().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L3_V)).onFalse(new Hold(elevator));
+        schmoXbox.y().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L4_V)).onFalse(new Hold(elevator));
         driverXbox.start().whileTrue(drivetrain.applyRequest(() -> brake));
-        driverXbox.leftTrigger().whileTrue(new getCurrentVoltage(elevator));
+        schmoXbox.start().whileTrue(new getCurrentVoltage(elevator));
 
 
         // When the left trig ger on driver xbox controller is pressed, drive in slow mode.
@@ -207,8 +207,7 @@ public class RobotContainer {
                 autoChooser.setDefaultOption("Testing", new AutoManipulate(manipulate, 60));
         autoChooser.addOption("TestAuto", new TestAuto(manipulate, elevator));
         autoChooser.addOption("Elevator Control", new ElevatorControl(elevator));
-        autoChooser.addOption("Taxi", (Command)(CommandSwerveDrivetrain.followPath("New Forward")));
-        // autoChooser.addOption("Move Forward 2", new FollowPath("NEw Forward"));
+        autoChooser.addOption("Move Forward 3", (Command)(CommandSwerveDrivetrain.followPath("New Forward")));
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 

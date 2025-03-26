@@ -52,7 +52,7 @@ public class Constants {
         public static final int ELEVATOR = 19;
         public static final int ELEVATOR2 = 20;
         //public static final int ELEVATOR_ENCODER = 20;
-        public static final double ELEVATOR_SPEED = -.8;
+        public static final double ELEVATOR_SPEED = -.70;
         public static final double ELEVATOR_DOWN = .1;
         public static final double SPROCKET_RADIUS = 0.606;
         public static final double SHAFT_SPEED = ((5000 * .8)/60)/5.95; // Calculates the rps of the elevator output shaft
