@@ -39,7 +39,7 @@ public class PosElevate extends Command {
       }
     } else if (inital > resistance){
       while (stopCheck == false){
-        stopCheck = m_elevator.elevateUp(Constants.ElevatorConstants.ELEVATOR_SPEED, resistance);
+        stopCheck = m_elevator.elevateUp(Constants.ElevatorConstants.FEED_FOWARD, resistance);
       }
     }
   }

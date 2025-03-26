@@ -28,31 +28,37 @@ public class Elevator extends SubsystemBase {
     posReader = new AnalogInput(0);
     
     elevateMotor2.follow(elevateMotor1);
-    elevateMotor1.setNeutralMode(NeutralMode.Brake);
-    elevateMotor2.setNeutralMode(NeutralMode.Brake);
+    //elevateMotor1.setNeutralMode(NeutralMode.Brake);
+    //elevateMotor2.setNeutralMode(NeutralMode.Brake);
   }
 
-  public boolean elevateUp(double speed, double resistance){
+  public boolean elevateUp(Double speed, Double resistance){
     double currentResistance = posReader.getVoltage();
     System.out.println("Current Resistance: " + currentResistance);
     if (currentResistance > (resistance)){
-      elevateMotor1.set(TalonSRXControlMode.PercentOutput, speed);
+      elevateMotor1.set(TalonSRXControlMode.PercentOutput, ProportionalSpeed(speed, resistance));
       return false;
     }
     else {
       return true;
     }
   }
+
   
   public boolean elevateDown(double speed, double resistance){
     double currentResistance = posReader.getVoltage();
     System.out.println("Current Resistance: " + currentResistance);
     if (currentResistance < resistance){
-      elevateMotor1.set(TalonSRXControlMode.PercentOutput, speed);  
+      elevateMotor1.set(TalonSRXControlMode.PercentOutput, ProportionalSpeed(getCurrentVoltage(), resistance));  
       return false;
     } else {
       return true;
     }
+  }
+
+
+  public Double ProportionalSpeed(Double speed, double target){
+    return (speed * (Math.abs(target-getCurrentVoltage())));
   }
 
 
@@ -71,7 +77,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public void hold(){
-    elevateMotor1.set(TalonSRXControlMode.PercentOutput, -.25);
+    elevateMotor1.set(TalonSRXControlMode.PercentOutput, Constants.ElevatorConstants.FEED_FOWARD);
   }
 
 
