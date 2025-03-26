@@ -41,7 +41,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "LeftIn"
     }
   ],
   "rotationTargets": [],
@@ -64,7 +64,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 179.55238582913944
+    "rotation": 179.55238582913947
   },
   "useDefaultConstraints": true
 }
