@@ -20,11 +20,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.commands.Climb;
+// import frc.robot.commands.Climb;
 import frc.robot.commands.Manipulate;
-import frc.robot.commands.ReverseClimb;
+// import frc.robot.commands.Read;
+// import frc.robot.commands.ReverseClimb;
 import frc.robot.commands.ReverseManipulate;
-import frc.robot.commands.getCurrentVoltage;
 import frc.robot.commands.autos.AutoManipulate;
 import frc.robot.commands.autos.ElevatorControl;
 import frc.robot.commands.autos.TestAuto;
@@ -33,13 +33,13 @@ import frc.robot.commands.elevator.Hold;
 import frc.robot.commands.elevator.PosElevate;
 import frc.robot.commands.elevator.Up;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Climber;
+// import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Manipulator;
 public class RobotContainer {
   private final Elevator elevator = new Elevator();
-  private final Climber climber = new Climber();
+  // private final Climber climber = new Climber();
   private final Manipulator manipulate = new Manipulator();
   private SendableChooser<Command> autoChooser;
   @SuppressWarnings("unused")
@@ -142,16 +142,14 @@ public class RobotContainer {
         //schmoXbox.pov(0).and(schmoXbox.pov(180));
         schmoXbox.rightTrigger().whileTrue(new Manipulate(manipulate));
         schmoXbox.leftTrigger().whileTrue(new ReverseManipulate(manipulate));
-        schmoXbox.leftBumper().whileTrue(new ReverseClimb(climber));
-        schmoXbox.rightBumper().whileTrue(new Climb(climber));
+        // schmoXbox.leftBumper().whileTrue(new ReverseClimb(climber));
+        // schmoXbox.rightBumper().whileTrue(new Climb(climber));
         schmoXbox.back().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.V0)).onFalse(new Hold(elevator));
         schmoXbox.a().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L1_V)).onFalse(new Hold(elevator));
         schmoXbox.b().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L2_V)).onFalse(new Hold(elevator));
         schmoXbox.x().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L3_V)).onFalse(new Hold(elevator));
         schmoXbox.y().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L4_V)).onFalse(new Hold(elevator));
         driverXbox.start().whileTrue(drivetrain.applyRequest(() -> brake));
-        schmoXbox.start().whileTrue(new getCurrentVoltage(elevator));
-
 
         // When the left trig ger on driver xbox controller is pressed, drive in slow mode.
         driverXbox.leftTrigger().whileTrue(drivetrain.applyRequest(() ->
@@ -204,7 +202,7 @@ public class RobotContainer {
           : stream
         );
 
-                autoChooser.setDefaultOption("Testing", new AutoManipulate(manipulate, 60));
+                autoChooser.setDefaultOption("Testing", new AutoManipulate(manipulate, elevator, 60));
         autoChooser.addOption("TestAuto", new TestAuto(manipulate, elevator));
         autoChooser.addOption("Elevator Control", new ElevatorControl(elevator));
         autoChooser.addOption("Move Forward 3", (Command)(CommandSwerveDrivetrain.followPath("New Forward")));

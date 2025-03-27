@@ -27,7 +27,7 @@ public class Center_90_L4 extends SequentialCommandGroup {
     addCommands(
       (Command)(CommandSwerveDrivetrain.followPath("Center-90")),
       new PosElevate(m_elevator, Constants.ElevatorConstants.L4_V),
-      new AutoManipulate(m_manipulator, 50),
+      new AutoManipulate(m_manipulator, m_elevator, 50),
       new PosElevate(m_elevator, Constants.ElevatorConstants.V0)
     );
   }

@@ -6,17 +6,15 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Encode;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class Read extends Command {
   /** Creates a new Read. */
-  Encode m_encode;
   Elevator m_elevator;
-  public Read(Encode m_encode) {
+  public Read(Elevator m_elevator) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.m_encode = m_encode;
-    addRequirements(m_encode);
+    this.m_elevator = m_elevator;
+    addRequirements(m_elevator);
   }
 
   // Called when the command is initially scheduled.
@@ -26,7 +24,7 @@ public class Read extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_encode.read();
+    System.out.println("Current Resistance: " + m_elevator.getCurrentVoltage());
 
   }
 

@@ -6,20 +6,24 @@ package frc.robot.commands.autos;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Manipulator;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AutoManipulate extends Command {
   /** Creates a new AutoManipulate. */
   Manipulator manipulate;
+  Elevator elevate;
   boolean stopCheck;
   int time;
   int timer;
-  public AutoManipulate(Manipulator manipulate, int time) {
+  public AutoManipulate(Manipulator manipulate, Elevator elevate, int time) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.time = time;
     this.manipulate = manipulate;
+    this.elevate = elevate;
     addRequirements(manipulate);
+    addRequirements(elevate);
   }
 
   // Called when the command is initially scheduled.
@@ -27,6 +31,7 @@ public class AutoManipulate extends Command {
   public void initialize() {
     stopCheck = false;
     timer = 0;
+    elevate.hold();
     manipulate.manipulate(Constants.ManipulatorConstants.MANIPULATE_SPEED);
   }
 

@@ -52,7 +52,7 @@ public class Constants {
         public static final int ELEVATOR = 19;
         public static final int ELEVATOR2 = 20;
         //public static final int ELEVATOR_ENCODER = 20;
-        public static final double ELEVATOR_SPEED = -.70;
+        public static final double ELEVATOR_SPEED = -.80;
         public static final double ELEVATOR_DOWN = .1;
         public static final double FEED_FOWARD = -.25;
         public static final double SPROCKET_RADIUS = 0.606;
@@ -68,12 +68,15 @@ public class Constants {
         public static final int L4_HEIGHT = 75;
 
         // units: volts
-        public static final double V0 = 3.14;
-        public static final double L1_V = 0.0;
-        public static final double L2_V = 2.0;
-        public static final double L3_V = 0.0;
-        public static final double L4_V = 0.0;
+        public static final double V0 = inToVolt(12.5);
+        public static final double L1_V = inToVolt(0);
+        public static final double L2_V = inToVolt(39);
+        public static final double L3_V = inToVolt(52.5);
+        public static final double L4_V = inToVolt(78.5);
 
+        private static double inToVolt(double inches) { // MAX IS 82
+            return -(inches - 96) / 26.362;
+        }
 
     }
 

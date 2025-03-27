@@ -24,7 +24,8 @@ public class TestAuto extends SequentialCommandGroup {
     this.m_manipulator = m_manipulator;
     addCommands(
       new PosElevate(m_elevator, Constants.ElevatorConstants.L2_V),
-      new AutoManipulate(m_manipulator, 50),
+      new Wait(25),
+      new AutoManipulate(m_manipulator, m_elevator, 50),
       new PosElevate(m_elevator, Constants.ElevatorConstants.V0)
     );
   }
