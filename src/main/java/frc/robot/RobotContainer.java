@@ -25,7 +25,7 @@ import frc.robot.commands.Manipulate;
 // import frc.robot.commands.Read;
 // import frc.robot.commands.ReverseClimb;
 import frc.robot.commands.ReverseManipulate;
-import frc.robot.commands.autos.AutoManipulate;
+import frc.robot.commands.autos.Center_90_L2;
 import frc.robot.commands.autos.ElevatorControl;
 import frc.robot.commands.autos.TestAuto;
 import frc.robot.commands.elevator.Down;
@@ -145,7 +145,7 @@ public class RobotContainer {
         // schmoXbox.leftBumper().whileTrue(new ReverseClimb(climber));
         // schmoXbox.rightBumper().whileTrue(new Climb(climber));
         schmoXbox.back().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.V0)).onFalse(new Hold(elevator));
-        schmoXbox.a().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L1_V)).onFalse(new Hold(elevator));
+        //schmoXbox.a().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L1_V)).onFalse(new Hold(elevator));
         schmoXbox.b().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L2_V)).onFalse(new Hold(elevator));
         schmoXbox.x().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L3_V)).onFalse(new Hold(elevator));
         schmoXbox.y().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L4_V)).onFalse(new Hold(elevator));
@@ -202,7 +202,7 @@ public class RobotContainer {
           : stream
         );
 
-                autoChooser.setDefaultOption("Testing", new AutoManipulate(manipulate, elevator, 60));
+        autoChooser.setDefaultOption("Center 90 L2", new Center_90_L2(manipulate, elevator));
         autoChooser.addOption("TestAuto", new TestAuto(manipulate, elevator));
         autoChooser.addOption("Elevator Control", new ElevatorControl(elevator));
         autoChooser.addOption("Move Forward 3", (Command)(CommandSwerveDrivetrain.followPath("New Forward")));
