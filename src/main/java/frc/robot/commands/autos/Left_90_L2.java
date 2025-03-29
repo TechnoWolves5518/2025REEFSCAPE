@@ -15,19 +15,17 @@ import frc.robot.subsystems.Manipulator;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Center_90_L2 extends SequentialCommandGroup {
+public class Left_90_L2 extends SequentialCommandGroup {
   Manipulator m_manipulator;
   Elevator m_elevator;
   /** Creates a new OneShot. */
-  public Center_90_L2(Manipulator m_manipulator, Elevator m_elevator) {
+  public Left_90_L2(Manipulator m_manipulator, Elevator m_elevator) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     this.m_elevator = m_elevator;
     this.m_manipulator = m_manipulator;
     addCommands(
-      (Command)(CommandSwerveDrivetrain.followPath("Center-90")),
-      new PosElevate(m_elevator, Constants.ElevatorConstants.L2_V),
-      new Wait(25),
+      (Command)(CommandSwerveDrivetrain.followPath("Left-90")),
       new PosElevate(m_elevator, Constants.ElevatorConstants.L2_V),
       new AutoManipulate(m_manipulator, m_elevator, 50),
       new PosElevate(m_elevator, Constants.ElevatorConstants.V0)

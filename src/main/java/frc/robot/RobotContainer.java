@@ -27,6 +27,8 @@ import frc.robot.commands.Manipulate;
 import frc.robot.commands.ReverseManipulate;
 import frc.robot.commands.autos.Center_90_L2;
 import frc.robot.commands.autos.ElevatorControl;
+import frc.robot.commands.autos.Left_90_L2;
+import frc.robot.commands.autos.Right_90_L2;
 import frc.robot.commands.autos.TestAuto;
 import frc.robot.commands.elevator.Down;
 import frc.robot.commands.elevator.Hold;
@@ -144,11 +146,11 @@ public class RobotContainer {
         schmoXbox.leftTrigger().whileTrue(new ReverseManipulate(manipulate));
         // schmoXbox.leftBumper().whileTrue(new ReverseClimb(climber));
         // schmoXbox.rightBumper().whileTrue(new Climb(climber));
-        schmoXbox.back().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.V0)).onFalse(new Hold(elevator));
+        schmoXbox.back().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.V0));
         //schmoXbox.a().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L1_V)).onFalse(new Hold(elevator));
-        schmoXbox.b().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L2_V)).onFalse(new Hold(elevator));
-        schmoXbox.x().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L3_V)).onFalse(new Hold(elevator));
-        schmoXbox.y().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L4_V)).onFalse(new Hold(elevator));
+        schmoXbox.b().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L2_V));
+        schmoXbox.x().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L3_V));
+        schmoXbox.y().onTrue(new PosElevate(elevator, Constants.ElevatorConstants.L4_V));
         driverXbox.start().whileTrue(drivetrain.applyRequest(() -> brake));
 
         // When the left trig ger on driver xbox controller is pressed, drive in slow mode.
@@ -203,6 +205,8 @@ public class RobotContainer {
         );
 
         autoChooser.setDefaultOption("Center 90 L2", new Center_90_L2(manipulate, elevator));
+        autoChooser.addOption("Right 90 L2", new Right_90_L2(manipulate, elevator));
+        autoChooser.addOption("Left 90 L2", new Left_90_L2(manipulate, elevator));
         autoChooser.addOption("TestAuto", new TestAuto(manipulate, elevator));
         autoChooser.addOption("Elevator Control", new ElevatorControl(elevator));
         autoChooser.addOption("Move Forward 3", (Command)(CommandSwerveDrivetrain.followPath("New Forward")));

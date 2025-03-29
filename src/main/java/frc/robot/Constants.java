@@ -52,8 +52,8 @@ public class Constants {
         public static final int ELEVATOR = 19;
         public static final int ELEVATOR2 = 20;
         //public static final int ELEVATOR_ENCODER = 20;
-        public static final double ELEVATOR_SPEED = -.80;
-        public static final double ELEVATOR_DOWN = .1;
+        public static final double ELEVATOR_SPEED = -.70;
+        public static final double ELEVATOR_DOWN = .2;
         public static final double FEED_FOWARD = -.25;
         public static final double SPROCKET_RADIUS = 0.606;
         public static final double SHAFT_SPEED = ((5000 * .8)/60)/5.95; // Calculates the rps of the elevator output shaft
@@ -70,7 +70,7 @@ public class Constants {
         // units: volts
         public static final double V0 = inToVolt(4.5);
         // public static final double L1_V = inToVolt(0);
-        public static final double L2_V = inToVolt(31.375);
+        public static final double L2_V = 2.05;
         public static final double L3_V = inToVolt(48.375);
         public static final double L4_V = inToVolt(73.375);
 

@@ -33,12 +33,12 @@ public class PosElevate extends Command {
   @Override
   public void execute() {
     
-    if (inital < resistance){
+    if (inital < resistance) {
       while (stopCheck == false) {
         stopCheck = m_elevator.elevate(Constants.ElevatorConstants.ELEVATOR_DOWN, resistance);
       }
-    } else if (inital > resistance){
-      while (stopCheck == false){
+    } else if (inital > resistance) {
+      while (stopCheck == false) {
         stopCheck = m_elevator.elevate(Constants.ElevatorConstants.ELEVATOR_SPEED, resistance);
       }
     }
@@ -47,7 +47,7 @@ public class PosElevate extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_elevator.adjust(0);
+    m_elevator.hold();
   }
 
   // Returns true when the command should end.

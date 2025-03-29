@@ -28,13 +28,14 @@ public class Elevator extends SubsystemBase {
     posReader = new AnalogInput(0);
     
     elevateMotor2.follow(elevateMotor1);
-    //elevateMotor1.setNeutralMode(NeutralMode.Brake);
-    //elevateMotor2.setNeutralMode(NeutralMode.Brake);
+    elevateMotor1.setNeutralMode(NeutralMode.Brake);
+    elevateMotor2.setNeutralMode(NeutralMode.Brake);
   }
 
   public boolean elevate(Double speed, Double resistance){
     double currentResistance = posReader.getVoltage();
     if ((Math.abs(currentResistance - resistance) > .002)){
+      //elevateMotor1.set(TalonSRXControlMode.PercentOutput, speed);
       elevateMotor1.set(TalonSRXControlMode.PercentOutput, speed);
       return false;
     }
@@ -47,8 +48,8 @@ public class Elevator extends SubsystemBase {
  
 
 
-  public Double ProportionalSpeed(Double speed, double target){
-    return (speed * (Math.abs(target-getCurrentVoltage())));
+  public Double ProportionalSpeed(double target){
+    return (Math.max(-1 ,Math.min(1, 0.35 + 0.25*(target-getCurrentVoltage()))));
   }
 
 
@@ -78,6 +79,7 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
+    
     // This method will be called once per scheduler run
   }
 }
