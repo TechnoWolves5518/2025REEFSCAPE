@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import edu.wpi.first.math.controller.*;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.Climb;
 import frc.robot.commands.Manipulate;
@@ -41,10 +42,13 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Manipulator;
+import frc.robot.subsystems.Vision;
+
 public class RobotContainer {
   private final Elevator elevator = new Elevator();
   private final Climber climber = new Climber();
   private final Manipulator manipulate = new Manipulator();
+  public final Vision vision = new Vision(1);
   private SendableChooser<Command> autoChooser;
   private double speedMultiplier = 1;
   private double angleMultiplier = 1;
@@ -52,6 +56,7 @@ public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double TotalMaxSpeed = MaxSpeed * SwerveConstants.speedMultiplier; // Total maximum speed of robot
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -77,6 +82,8 @@ public class RobotContainer {
     SlewRateLimiter joystickXLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
     SlewRateLimiter joystickYLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
     SlewRateLimiter joystickZLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Turn);
+    PIDController autoAimPID = new PIDController(0,0,0);
+
       
     // Functions to get the slew rate limited values of the joysticks
     double driverLeftXLimited() {
@@ -100,6 +107,14 @@ public class RobotContainer {
     double joystickTLimited() {
       driverJoystick.setTwistChannel(5);
       return joystickZLimiter.calculate(driverJoystick.getTwist() * -driverJoystick.getZ());
+    }
+
+    double getAutoAim() {
+      
+      double yaw = vision.getYaw();
+      double pidFilter = autoAimPID.calculate(yaw, 0);
+      SmartDashboard.putNumber("PID", pidFilter);
+      return pidFilter;
     }
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -134,6 +149,7 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+      autoAimPID.enableContinuousInput(-180, 180);
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         configureJoysticks();
@@ -189,6 +205,10 @@ public class RobotContainer {
 
         // Reset the field centric orientation when button L3 on the joystick is pressed
         driverJoystick.button(4).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+
+        driverJoystick.button(1).whileTrue(drivetrain.applyRequest(() ->
+        driveRobot.withRotationalRate(getAutoAim())
+        ));
 
         // reset the field-centric heading on y button press
         driverXbox.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));

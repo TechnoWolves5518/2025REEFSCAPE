@@ -1,0 +1,80 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot.subsystems;
+
+
+import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import org.photonvision.*;
+import org.photonvision.targeting.*;
+import edu.wpi.first.wpilibj.DriverStation;
+
+public class Vision extends SubsystemBase {
+  /** Creates a new Vision. */
+  private PhotonCamera aprilCam;
+  private PhotonTrackedTarget trackedTag;
+  private int trackedTagID;
+  private PhotonPipelineResult results;
+  private boolean targetVisible;
+  private double targetYaw;
+  
+
+  public Vision(int TagID) {
+    aprilCam = new PhotonCamera("aprilCam");
+    if(!aprilCam.isConnected()) {
+      DriverStation.reportWarning("AprilTag Camera Missing", false);
+    }
+    trackedTagID = TagID;
+  }
+
+  public void update() {
+    targetVisible = false;
+    targetYaw = 0.0;
+    var results = aprilCam.getAllUnreadResults();
+    if (!results.isEmpty()) {
+      // Camera processed a new frame since last
+      // Get the last one in the list.
+      var result = results.get(results.size() - 1);
+      if (result.hasTargets()) {
+        // At least one AprilTag was seen by the camera
+        for (var target : result.getTargets()) {
+          if (target.getFiducialId() == trackedTagID) {
+            // Found Tag 7, record its information
+            targetYaw = target.getYaw();
+            targetVisible = true;
+          }
+        }
+      }
+    }
+
+  }
+
+  public double getYaw() {
+    return targetYaw;
+  }
+
+  public void checkConnection() {
+    if(!aprilCam.isConnected()) {
+      DriverStation.reportWarning("AprilTag Camera Missing", false);
+    }
+  }
+  
+  public boolean isVisible() {
+    return targetVisible;
+  }
+
+  @Override
+  public void periodic() {
+    this.update();
+    this.checkConnection();
+    if(this.isVisible()) {
+      SmartDashboard.putNumber("Target Yaw", this.getYaw());
+    }
+    SmartDashboard.putBoolean("Target Visible", this.isVisible());
+  }
+}
+
