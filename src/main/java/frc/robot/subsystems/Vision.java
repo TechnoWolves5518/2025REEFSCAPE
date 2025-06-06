@@ -12,6 +12,7 @@ import frc.robot.Constants;
 import org.photonvision.*;
 import org.photonvision.targeting.*;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.math.geometry.*;
 
 public class Vision extends SubsystemBase {
   /** Creates a new Vision. */
@@ -21,6 +22,13 @@ public class Vision extends SubsystemBase {
   private PhotonPipelineResult results;
   private boolean targetVisible;
   private double targetYaw;
+  private Transform3d targetTransform3d;
+  private double targetTranslateX;
+  private double targetTranslateY;
+  private Transform2d robotToCamera = new Transform2d(13.5, 10.375, new Rotation2d(0));
+  private Transform3d robotToCamera3d = new Transform3d(13.5, 10.375, 6, new Rotation3d(0,0,0));
+
+  
   
 
   public Vision(int TagID) {
@@ -31,9 +39,11 @@ public class Vision extends SubsystemBase {
     trackedTagID = TagID;
   }
 
+  public void setTrackedTag(int TagID) {
+    trackedTagID = TagID;
+  }
+
   public void update() {
-    targetVisible = false;
-    targetYaw = 0.0;
     var results = aprilCam.getAllUnreadResults();
     if (!results.isEmpty()) {
       // Camera processed a new frame since last
@@ -43,11 +53,21 @@ public class Vision extends SubsystemBase {
         // At least one AprilTag was seen by the camera
         for (var target : result.getTargets()) {
           if (target.getFiducialId() == trackedTagID) {
-            // Found Tag 7, record its information
+            // Found Tag, record its information
             targetYaw = target.getYaw();
+            targetTransform3d = target.getBestCameraToTarget();
+            targetTranslateX = targetTransform3d.getX();
+            targetTranslateY = targetTransform3d.getY();
+            Pose2d targetPose2d = new Pose2d(targetTranslateX, targetTranslateY, new Rotation2d(targetYaw));
             targetVisible = true;
           }
+          else {
+            targetVisible = false;
+          }
         }
+      }
+      else {
+        targetVisible = false;
       }
     }
 
@@ -57,10 +77,19 @@ public class Vision extends SubsystemBase {
     return targetYaw;
   }
 
+  public double getTranslateX() {
+    return targetTranslateX;
+  }
+
+  public double getTranslateY() {
+    return targetTranslateY;
+  }
+
   public void checkConnection() {
     if(!aprilCam.isConnected()) {
-      DriverStation.reportWarning("AprilTag Camera Missing", false);
+      DriverStation.reportWarning("AprilTag Camera 01 Missing", false);
     }
+    
   }
   
   public boolean isVisible() {

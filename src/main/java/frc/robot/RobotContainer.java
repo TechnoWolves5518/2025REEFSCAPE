@@ -4,8 +4,13 @@
 
 package frc.robot;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecondPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
+
+
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -56,6 +61,7 @@ public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double TotalMaxSpeed = MaxSpeed * SwerveConstants.speedMultiplier; // Total maximum speed of robot
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    private double MaxAngularAcceleration = RotationsPerSecondPerSecond.of(.75/.25).in(RadiansPerSecondPerSecond);
     
 
     /* Setting up bindings for necessary control of the swerve drive platform */
@@ -82,7 +88,9 @@ public class RobotContainer {
     SlewRateLimiter joystickXLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
     SlewRateLimiter joystickYLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
     SlewRateLimiter joystickZLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Turn);
-    PIDController autoAimPID = new PIDController(0,0,0);
+    PIDController autoAimPID = new PIDController((5.2342/60),(0),(0));
+    PIDController XAutoAimPID = new PIDController((1/30), (0), (0));
+    PIDController YAutoAimPID = new PIDController((1/30), (0), (0));
 
       
     // Functions to get the slew rate limited values of the joysticks
@@ -109,12 +117,40 @@ public class RobotContainer {
       return joystickZLimiter.calculate(driverJoystick.getTwist() * -driverJoystick.getZ());
     }
 
-    double getAutoAim() {
-      
-      double yaw = vision.getYaw();
-      double pidFilter = autoAimPID.calculate(yaw, 0);
-      SmartDashboard.putNumber("PID", pidFilter);
-      return pidFilter;
+    double getAutoAimAngle() {
+      if(vision.isVisible()) {
+        double yaw = vision.getYaw();
+        double pidFilter = autoAimPID.calculate(yaw, 0);
+        SmartDashboard.putNumber("AA Angle", pidFilter);
+        return pidFilter;
+      }
+      else {
+        return 0;
+      }
+    }
+
+    double getAutoAimX() {
+      if(vision.isVisible()) {
+        double x = vision.getTranslateX();
+        double pidFilter = XAutoAimPID.calculate(x, 0);
+        SmartDashboard.putNumber("AA X", pidFilter);
+        return pidFilter;
+      }
+      else {
+        return 0;
+      }
+    }
+
+    double getAutoAimY() {
+      if(vision.isVisible()) {
+        double y = vision.getTranslateY();
+        double pidFilter = YAutoAimPID.calculate(y,10);
+        SmartDashboard.putNumber("AA Y", pidFilter);
+        return pidFilter;
+      }
+      else {
+        return 0;
+      }
     }
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -207,7 +243,7 @@ public class RobotContainer {
         driverJoystick.button(4).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         driverJoystick.button(1).whileTrue(drivetrain.applyRequest(() ->
-        driveRobot.withRotationalRate(getAutoAim())
+        driveRobot.withVelocityX(getAutoAimX()).withVelocityY(getAutoAimY()).withRotationalRate(getAutoAimAngle())
         ));
 
         // reset the field-centric heading on y button press
