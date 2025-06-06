@@ -59,6 +59,10 @@ public class Vision extends SubsystemBase {
             targetTranslateX = targetTransform3d.getX();
             targetTranslateY = targetTransform3d.getY();
             Pose2d targetPose2d = new Pose2d(targetTranslateX, targetTranslateY, new Rotation2d(targetYaw));
+            Pose2d updatedPose2d = targetPose2d.transformBy(robotToCamera);
+            targetYaw = updatedPose2d.getRotation().getDegrees();
+            targetTranslateX = updatedPose2d.getX();
+            targetTranslateY = updatedPose2d.getY();
             targetVisible = true;
           }
           else {
@@ -89,7 +93,7 @@ public class Vision extends SubsystemBase {
     if(!aprilCam.isConnected()) {
       DriverStation.reportWarning("AprilTag Camera 01 Missing", false);
     }
-    
+
   }
   
   public boolean isVisible() {

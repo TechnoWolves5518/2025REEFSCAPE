@@ -18,6 +18,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 // import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 // import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -50,28 +51,30 @@ import frc.robot.subsystems.Manipulator;
 import frc.robot.subsystems.Vision;
 
 public class RobotContainer {
-  private final Elevator elevator = new Elevator();
-  private final Climber climber = new Climber();
-  private final Manipulator manipulate = new Manipulator();
-  public final Vision vision = new Vision(1);
-  private SendableChooser<Command> autoChooser;
-  private double speedMultiplier = 1;
-  private double angleMultiplier = 1;
+    private final Elevator elevator = new Elevator();
+    private final Climber climber = new Climber();
+    private final Manipulator manipulate = new Manipulator();
+    public final Vision vision = new Vision(1);
+    private SendableChooser<Command> autoChooser;
+    private double speedMultiplier = 1;
+    private double angleMultiplier = 1;
 
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    private double TotalMaxSpeed = MaxSpeed * SwerveConstants.speedMultiplier; // Total maximum speed of robot
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-    private double MaxAngularAcceleration = RotationsPerSecondPerSecond.of(.75/.25).in(RadiansPerSecondPerSecond);
+    private double MaxAllowedSpeed = MaxSpeed * SwerveConstants.SpeedMultiplier; // Maximum speed of robot for manual driving
+    private double MaxAllowedSpeedAutomated = MaxSpeed * SwerveConstants.AutoSpeedMultiplier; // Maximum speed of robot for automated helper functions
+    private double MaxAllowedAccelerationAutomated = (MaxAllowedSpeedAutomated / 0.5);
+    private double MaxAngularSpeed = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    private double MaxAngularAcceleration = (MaxAngularSpeed / 0.25);
     
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * SwerveConstants.deadband).withRotationalDeadband(MaxAngularRate * SwerveConstants.deadband) // Add a 10% deadband
+            .withDeadband(MaxSpeed * SwerveConstants.deadband).withRotationalDeadband(MaxAngularSpeed * SwerveConstants.deadband) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
 
     private final SwerveRequest.RobotCentric driveRobot = new SwerveRequest.RobotCentric()
-            .withDeadband(MaxSpeed * SwerveConstants.deadband).withRotationalDeadband(MaxAngularRate * SwerveConstants.deadband)
+            .withDeadband(MaxSpeed * SwerveConstants.deadband).withRotationalDeadband(MaxAngularSpeed * SwerveConstants.deadband)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -81,16 +84,16 @@ public class RobotContainer {
     private final CommandJoystick driverJoystick = new CommandJoystick(2);
     private final CommandXboxController schmoXbox = new CommandXboxController(1);
 
-    SlewRateLimiter driverLeftXLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
-    SlewRateLimiter driverLeftYLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
-    SlewRateLimiter driverRightXLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Turn);
-    SlewRateLimiter driverRightYLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Turn);
-    SlewRateLimiter joystickXLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
-    SlewRateLimiter joystickYLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
-    SlewRateLimiter joystickZLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Turn);
-    PIDController autoAimPID = new PIDController((5.2342/60),(0),(0));
-    PIDController XAutoAimPID = new PIDController((1/30), (0), (0));
-    PIDController YAutoAimPID = new PIDController((1/30), (0), (0));
+    private SlewRateLimiter driverLeftXLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
+    private SlewRateLimiter driverLeftYLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
+    private SlewRateLimiter driverRightXLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Turn);
+    private SlewRateLimiter driverRightYLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Turn);
+    private SlewRateLimiter joystickXLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
+    private SlewRateLimiter joystickYLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
+    private SlewRateLimiter joystickZLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Turn);
+    private ProfiledPIDController AngleAutoAimPID = new ProfiledPIDController((5.2342/60),(0),(0), new TrapezoidProfile.Constraints(MaxAngularSpeed, MaxAngularAcceleration));
+    private ProfiledPIDController XAutoAimPID = new ProfiledPIDController((1/30), (0), (0), new TrapezoidProfile.Constraints(MaxAllowedSpeedAutomated, MaxAllowedAccelerationAutomated));
+    private ProfiledPIDController YAutoAimPID = new ProfiledPIDController((1/30), (0), (0), new TrapezoidProfile.Constraints(MaxAllowedSpeedAutomated, MaxAllowedAccelerationAutomated));
 
       
     // Functions to get the slew rate limited values of the joysticks
@@ -117,11 +120,13 @@ public class RobotContainer {
       return joystickZLimiter.calculate(driverJoystick.getTwist() * -driverJoystick.getZ());
     }
 
-    double getAutoAimAngle() {
+    double getAutoAimAngleSpeed() { // Use PhotonVision to get the auto aim speed for angle
       if(vision.isVisible()) {
         double yaw = vision.getYaw();
-        double pidFilter = autoAimPID.calculate(yaw, 0);
-        SmartDashboard.putNumber("AA Angle", pidFilter);
+        double pidFilter = AngleAutoAimPID.calculate(yaw, 0);
+        double setpointVelocity = AngleAutoAimPID.getSetpoint().velocity;
+        pidFilter = pidFilter + setpointVelocity;
+        SmartDashboard.putNumber("Auto Aim - Angle", pidFilter);
         return pidFilter;
       }
       else {
@@ -129,11 +134,16 @@ public class RobotContainer {
       }
     }
 
-    double getAutoAimX() {
+    double getAutoAimXSpeed() { // Use PhotonVision to get the auto aim speed for X axis
+      if(true) {
+        return 0;
+      }
       if(vision.isVisible()) {
         double x = vision.getTranslateX();
         double pidFilter = XAutoAimPID.calculate(x, 0);
-        SmartDashboard.putNumber("AA X", pidFilter);
+        double setpointVelocity = XAutoAimPID.getSetpoint().velocity;
+        pidFilter = pidFilter + setpointVelocity;
+        SmartDashboard.putNumber("Auto Aim - X", pidFilter);
         return pidFilter;
       }
       else {
@@ -141,11 +151,16 @@ public class RobotContainer {
       }
     }
 
-    double getAutoAimY() {
+    double getAutoAimYSpeed() { // Use PhotonVision to get the auto aim speed for Y axis
+      if(true) {
+        return 0;
+      }
       if(vision.isVisible()) {
         double y = vision.getTranslateY();
-        double pidFilter = YAutoAimPID.calculate(y,10);
-        SmartDashboard.putNumber("AA Y", pidFilter);
+        double pidFilter = YAutoAimPID.calculate(y,30);
+        double setpointVelocity = YAutoAimPID.getSetpoint().velocity;
+        pidFilter = pidFilter + setpointVelocity;
+        SmartDashboard.putNumber("Auto Aim - Y", pidFilter); 
         return pidFilter;
       }
       else {
@@ -165,9 +180,9 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
           // Drivetrain will execute this command periodically
           drivetrain.applyRequest(() ->
-          drive.withVelocityX(-joystickYLimited() * TotalMaxSpeed) // Drive forward with negative Y (forward)
-              .withVelocityY(-joystickXLimited() * TotalMaxSpeed) // Drive left with negative X (left)
-              .withRotationalRate(-joystickTLimited() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+          drive.withVelocityX(-joystickYLimited() * MaxAllowedSpeed) // Drive forward with negative Y (forward)
+              .withVelocityY(-joystickXLimited() * MaxAllowedSpeed) // Drive left with negative X (left)
+              .withRotationalRate(-joystickTLimited() * MaxAngularSpeed) // Drive counterclockwise with negative X (left)
               .withDeadband(Constants.SwerveConstants.deadband) // Add a deadband
           )
       );
@@ -176,16 +191,15 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
           // Drivetrain will execute this command periodically
           drivetrain.applyRequest(() ->
-          drive.withVelocityX(-driverLeftYLimited() * TotalMaxSpeed) // Drive forward with negative Y (forward)
-              .withVelocityY(-driverLeftXLimited() * TotalMaxSpeed) // Drive left with negative X (left)
-              .withRotationalRate(-driverRightXLimited() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+          drive.withVelocityX(-driverLeftYLimited() * MaxAllowedSpeed) // Drive forward with negative Y (forward)
+              .withVelocityY(-driverLeftXLimited() * MaxAllowedSpeed) // Drive left with negative X (left)
+              .withRotationalRate(-driverRightXLimited() * MaxAngularSpeed) // Drive counterclockwise with negative X (left)
               .withDeadband(Constants.SwerveConstants.deadband) // Add a deadband
           )
       );}
     }
 
     private void configureBindings() {
-      autoAimPID.enableContinuousInput(-180, 180);
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         configureJoysticks();
@@ -206,33 +220,33 @@ public class RobotContainer {
 
         // When the left trigger on driver xbox controller is pressed, drive in slow mode.
         driverXbox.leftTrigger().whileTrue(drivetrain.applyRequest(() ->
-        drive.withVelocityX(-driverLeftYLimited() * TotalMaxSpeed * Constants.SwerveConstants.SlowSpeed) // Drive forward with negative Y (forward)
-            .withVelocityY(-driverLeftXLimited() * TotalMaxSpeed * Constants.SwerveConstants.SlowSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-driverRightXLimited() * MaxAngularRate * Constants.SwerveConstants.SlowAngle) // Drive counterclockwise with negative X (left)
+        drive.withVelocityX(-driverLeftYLimited() * MaxAllowedSpeed * Constants.SwerveConstants.SlowSpeed) // Drive forward with negative Y (forward)
+            .withVelocityY(-driverLeftXLimited() * MaxAllowedSpeed * Constants.SwerveConstants.SlowSpeed) // Drive left with negative X (left)
+            .withRotationalRate(-driverRightXLimited() * MaxAngularSpeed * Constants.SwerveConstants.SlowAngle) // Drive counterclockwise with negative X (left)
             .withDeadband(Constants.SwerveConstants.deadband) // Add a deadband
         ));
 
         // When a bumper on the driver xbox controller is pressed 
         driverXbox.leftBumper().or(driverXbox.rightBumper()).whileTrue(drivetrain.applyRequest(() ->
-        driveRobot.withVelocityX(-driverLeftYLimited() * TotalMaxSpeed * Constants.SwerveConstants.SlowSpeed) // Drive forward with negative Y (forward)
-            .withVelocityY(-driverLeftXLimited() * TotalMaxSpeed * Constants.SwerveConstants.SlowSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-driverRightXLimited() * MaxAngularRate * Constants.SwerveConstants.SlowAngle) // Drive counterclockwise with negative X (left)
+        driveRobot.withVelocityX(-driverLeftYLimited() * MaxAllowedSpeed * Constants.SwerveConstants.SlowSpeed) // Drive forward with negative Y (forward)
+            .withVelocityY(-driverLeftXLimited() * MaxAllowedSpeed * Constants.SwerveConstants.SlowSpeed) // Drive left with negative X (left)
+            .withRotationalRate(-driverRightXLimited() * MaxAngularSpeed * Constants.SwerveConstants.SlowAngle) // Drive counterclockwise with negative X (left)
             .withDeadband(Constants.SwerveConstants.deadband) // Add a deadband
         ));
 
         // When the right trigger on the driver xbox controller is pressed, drive robot oriented.
         driverXbox.rightTrigger().whileTrue(drivetrain.applyRequest(() ->
-        driveRobot.withVelocityX(-driverLeftYLimited() * TotalMaxSpeed) // Drive forward with negative Y (forward)
-            .withVelocityY(-driverLeftXLimited() * TotalMaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-driverRightXLimited() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        driveRobot.withVelocityX(-driverLeftYLimited() * MaxAllowedSpeed) // Drive forward with negative Y (forward)
+            .withVelocityY(-driverLeftXLimited() * MaxAllowedSpeed) // Drive left with negative X (left)
+            .withRotationalRate(-driverRightXLimited() * MaxAngularSpeed) // Drive counterclockwise with negative X (left)
             .withDeadband(Constants.SwerveConstants.deadband) // Add a deadband
         ));
 
         // Switch to robot oriented mode when the trigger on the joystick is pressed.
         driverJoystick.button(1).whileTrue(drivetrain.applyRequest(() ->
-        driveRobot.withVelocityX(-joystickYLimited() * TotalMaxSpeed) // Drive forward with negative Y (forward)
-            .withVelocityY(-joystickXLimited() * TotalMaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-joystickTLimited() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        driveRobot.withVelocityX(-joystickYLimited() * MaxAllowedSpeed) // Drive forward with negative Y (forward)
+            .withVelocityY(-joystickXLimited() * MaxAllowedSpeed) // Drive left with negative X (left)
+            .withRotationalRate(-joystickTLimited() * MaxAngularSpeed) // Drive counterclockwise with negative X (left)
             .withDeadband(Constants.SwerveConstants.deadband) // Add a deadband
         ));
 
@@ -243,7 +257,7 @@ public class RobotContainer {
         driverJoystick.button(4).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         driverJoystick.button(1).whileTrue(drivetrain.applyRequest(() ->
-        driveRobot.withVelocityX(getAutoAimX()).withVelocityY(getAutoAimY()).withRotationalRate(getAutoAimAngle())
+        driveRobot.withVelocityX(getAutoAimXSpeed()).withVelocityY(getAutoAimYSpeed()).withRotationalRate(getAutoAimAngleSpeed())
         ));
 
         // reset the field-centric heading on y button press
