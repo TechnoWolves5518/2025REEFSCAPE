@@ -8,9 +8,11 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
 import org.photonvision.*;
 import org.photonvision.targeting.*;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.math.geometry.*;
 
@@ -25,8 +27,9 @@ public class Vision extends SubsystemBase {
   private Transform3d targetTransform3d;
   private double targetTranslateX;
   private double targetTranslateY;
-  private Transform2d robotToCamera = new Transform2d(13.5, 10.375, new Rotation2d(0));
+  private Transform2d robotToCamera = new Transform2d(Units.inchesToMeters(13.5), Units.inchesToMeters(10.375), new Rotation2d(0));
   private Transform3d robotToCamera3d = new Transform3d(13.5, 10.375, 6, new Rotation3d(0,0,0));
+  private Transform2d cameraToRobot = robotToCamera.inverse();
 
   
   
@@ -54,13 +57,13 @@ public class Vision extends SubsystemBase {
         for (var target : result.getTargets()) {
           if (target.getFiducialId() == trackedTagID) {
             // Found Tag, record its information
-            targetYaw = target.getYaw();
             targetTransform3d = target.getBestCameraToTarget();
             targetTranslateX = targetTransform3d.getX();
             targetTranslateY = targetTransform3d.getY();
+            targetYaw = targetTransform3d.getRotation().getZ();
             Pose2d targetPose2d = new Pose2d(targetTranslateX, targetTranslateY, new Rotation2d(targetYaw));
-            Pose2d updatedPose2d = targetPose2d.transformBy(robotToCamera);
-            targetYaw = updatedPose2d.getRotation().getDegrees();
+            Pose2d updatedPose2d = targetPose2d.transformBy(cameraToRobot);
+            targetYaw = updatedPose2d.getRotation().getRadians();
             targetTranslateX = updatedPose2d.getX();
             targetTranslateY = updatedPose2d.getY();
             targetVisible = true;
@@ -72,6 +75,12 @@ public class Vision extends SubsystemBase {
       }
       else {
         targetVisible = false;
+      }
+    }
+    else {
+      if(!aprilCam.isConnected()) {
+        targetVisible = false;
+        DriverStation.reportError("PhotonVision System Failure - No camera", false);
       }
     }
 
@@ -105,7 +114,9 @@ public class Vision extends SubsystemBase {
     this.update();
     this.checkConnection();
     if(this.isVisible()) {
-      SmartDashboard.putNumber("Target Yaw", this.getYaw());
+      SmartDashboard.putNumber("Target Yaw", Units.radiansToDegrees(this.getYaw()));
+      SmartDashboard.putNumber("Target X", targetTranslateX);
+      SmartDashboard.putNumber("Target Y", targetTranslateY);
     }
     SmartDashboard.putBoolean("Target Visible", this.isVisible());
   }

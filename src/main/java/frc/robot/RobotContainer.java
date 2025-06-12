@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecondPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
+import edu.wpi.first.math.util.Units;
 
 
 
@@ -62,8 +63,8 @@ public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAllowedSpeed = MaxSpeed * SwerveConstants.SpeedMultiplier; // Maximum speed of robot for manual driving
     private double MaxAllowedSpeedAutomated = MaxSpeed * SwerveConstants.AutoSpeedMultiplier; // Maximum speed of robot for automated helper functions
-    private double MaxAllowedAccelerationAutomated = (MaxAllowedSpeedAutomated / 0.5);
-    private double MaxAngularSpeed = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    private double MaxAllowedAccelerationAutomated = (MaxAllowedSpeedAutomated / 0.3);
+    private double MaxAngularSpeed = RotationsPerSecond.of(0.25).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
     private double MaxAngularAcceleration = (MaxAngularSpeed / 0.25);
     
 
@@ -87,11 +88,11 @@ public class RobotContainer {
     private SlewRateLimiter driverLeftXLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
     private SlewRateLimiter driverLeftYLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
     private SlewRateLimiter driverRightXLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Turn);
-    private SlewRateLimiter driverRightYLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Turn);
+    private SlewRateLimiter driverRightYLimiter = new  SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Turn);
     private SlewRateLimiter joystickXLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
     private SlewRateLimiter joystickYLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Drive);
     private SlewRateLimiter joystickZLimiter = new SlewRateLimiter(Constants.SwerveConstants.SlewLimit_Turn);
-    private ProfiledPIDController AngleAutoAimPID = new ProfiledPIDController((5.2342/60),(0),(0), new TrapezoidProfile.Constraints(MaxAngularSpeed, MaxAngularAcceleration));
+    private ProfiledPIDController AngleAutoAimPID = new ProfiledPIDController((1),(0),(0), new TrapezoidProfile.Constraints(MaxAngularSpeed, MaxAngularAcceleration));
     private ProfiledPIDController XAutoAimPID = new ProfiledPIDController((1/30), (0), (0), new TrapezoidProfile.Constraints(MaxAllowedSpeedAutomated, MaxAllowedAccelerationAutomated));
     private ProfiledPIDController YAutoAimPID = new ProfiledPIDController((1/30), (0), (0), new TrapezoidProfile.Constraints(MaxAllowedSpeedAutomated, MaxAllowedAccelerationAutomated));
 
@@ -123,11 +124,11 @@ public class RobotContainer {
     double getAutoAimAngleSpeed() { // Use PhotonVision to get the auto aim speed for angle
       if(vision.isVisible()) {
         double yaw = vision.getYaw();
-        double pidFilter = AngleAutoAimPID.calculate(yaw, 0);
+        double pidFilter = AngleAutoAimPID.calculate(yaw, Units.degreesToRadians(180));
         double setpointVelocity = AngleAutoAimPID.getSetpoint().velocity;
-        pidFilter = pidFilter + setpointVelocity;
-        SmartDashboard.putNumber("Auto Aim - Angle", pidFilter);
-        return pidFilter;
+        //pidFilter = pidFilter + setpointVelocity;
+        SmartDashboard.putNumber("Auto Aim - Angle", -pidFilter);
+        return 0;
       }
       else {
         return 0;
@@ -168,6 +169,10 @@ public class RobotContainer {
       }
     }
 
+    void updateGoal() {
+      
+    }
+
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
     public RobotContainer() {
@@ -200,6 +205,7 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+      AngleAutoAimPID.enableContinuousInput(Units.degreesToRadians(-180),Units.degreesToRadians(180));
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         configureJoysticks();
