@@ -73,6 +73,9 @@ public class RobotContainer {
     private final SwerveRequest.RobotCentric driveRobot = new SwerveRequest.RobotCentric()
             .withDeadband(MaxSpeed * SwerveConstants.deadband).withRotationalDeadband(MaxAngularRate * SwerveConstants.deadband)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
+    private final SwerveRequest.RobotCentric driveRobotAuto = new SwerveRequest.RobotCentric()
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
     private final Telemetry logger = new Telemetry(MaxSpeed);
@@ -186,93 +189,105 @@ public class RobotContainer {
 
     private void configureBindings() {
       autoAimPID.enableContinuousInput(-180, 180);
-        // Note that X is defined as forward according to WPILib convention,
-        // and Y is defined as to the left according to WPILib convention.
-        configureJoysticks();
-        // Schmo commands:
-        schmoXbox.pov(0).whileTrue(new Up(elevator)).whileFalse(new Hold(elevator));
-        schmoXbox.pov(180).whileTrue(new Down(elevator)).whileFalse(new Hold(elevator));
-        //schmoXbox.pov(0).and(schmoXbox.pov(180));
-        schmoXbox.leftTrigger().whileTrue(new Manipulate(manipulate));
-        schmoXbox.rightTrigger().whileTrue(new ReverseManipulate(manipulate));
-        schmoXbox.leftBumper().whileTrue(new ReverseClimb(climber));
-        schmoXbox.rightBumper().whileTrue(new Climb(climber));
-        // schmoXbox.a().onTrue(new  L1(elevator));
-        // schmoXbox.b().onTrue(new L2(elevator));
-        // schmoXbox.x().onTrue(new L3(elevator));
-        // schmoXbox.y().onTrue(new L4(elevator));
-        schmoXbox.back().onTrue(new ReturnZero(elevator));
-        driverXbox.start().whileTrue(drivetrain.applyRequest(() -> brake));
+      // Note that X is defined as forward according to WPILib convention,
+      // and Y is defined as to the left according to WPILib convention.
+      configureJoysticks();
+      // Schmo commands:
+      schmoXbox.pov(0).whileTrue(new Up(elevator)).whileFalse(new Hold(elevator));
+      schmoXbox.pov(180).whileTrue(new Down(elevator)).whileFalse(new Hold(elevator));
+      //schmoXbox.pov(0).and(schmoXbox.pov(180));
+      schmoXbox.leftTrigger().whileTrue(new Manipulate(manipulate));
+      schmoXbox.rightTrigger().whileTrue(new ReverseManipulate(manipulate));
+      schmoXbox.leftBumper().whileTrue(new ReverseClimb(climber));
+      schmoXbox.rightBumper().whileTrue(new Climb(climber));
+      // schmoXbox.a().onTrue(new  L1(elevator));
+      // schmoXbox.b().onTrue(new L2(elevator));
+      // schmoXbox.x().onTrue(new L3(elevator));
+      // schmoXbox.y().onTrue(new L4(elevator));
+      schmoXbox.back().onTrue(new ReturnZero(elevator));
+      driverXbox.start().whileTrue(drivetrain.applyRequest(() -> brake));
 
-        // When the left trigger on driver xbox controller is pressed, drive in slow mode.
-        driverXbox.leftTrigger().whileTrue(drivetrain.applyRequest(() ->
-        drive.withVelocityX(-driverLeftYLimited() * TotalMaxSpeed * Constants.SwerveConstants.SlowSpeed) // Drive forward with negative Y (forward)
-            .withVelocityY(-driverLeftXLimited() * TotalMaxSpeed * Constants.SwerveConstants.SlowSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-driverRightXLimited() * MaxAngularRate * Constants.SwerveConstants.SlowAngle) // Drive counterclockwise with negative X (left)
-            .withDeadband(Constants.SwerveConstants.deadband) // Add a deadband
-        ));
+      // When the left trigger on driver xbox controller is pressed, drive in slow mode.
+      driverXbox.leftTrigger().whileTrue(drivetrain.applyRequest(() ->
+      drive.withVelocityX(-driverLeftYLimited() * TotalMaxSpeed * Constants.SwerveConstants.SlowSpeed) // Drive forward with negative Y (forward)
+          .withVelocityY(-driverLeftXLimited() * TotalMaxSpeed * Constants.SwerveConstants.SlowSpeed) // Drive left with negative X (left)
+          .withRotationalRate(-driverRightXLimited() * MaxAngularRate * Constants.SwerveConstants.SlowAngle) // Drive counterclockwise with negative X (left)
+          .withDeadband(Constants.SwerveConstants.deadband) // Add a deadband
+      ));
 
-        // When a bumper on the driver xbox controller is pressed 
-        driverXbox.leftBumper().or(driverXbox.rightBumper()).whileTrue(drivetrain.applyRequest(() ->
-        driveRobot.withVelocityX(-driverLeftYLimited() * TotalMaxSpeed * Constants.SwerveConstants.SlowSpeed) // Drive forward with negative Y (forward)
-            .withVelocityY(-driverLeftXLimited() * TotalMaxSpeed * Constants.SwerveConstants.SlowSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-driverRightXLimited() * MaxAngularRate * Constants.SwerveConstants.SlowAngle) // Drive counterclockwise with negative X (left)
-            .withDeadband(Constants.SwerveConstants.deadband) // Add a deadband
-        ));
+      // When a bumper on the driver xbox controller is pressed 
+      driverXbox.leftBumper().or(driverXbox.rightBumper()).whileTrue(drivetrain.applyRequest(() ->
+      driveRobot.withVelocityX(-driverLeftYLimited() * TotalMaxSpeed * Constants.SwerveConstants.SlowSpeed) // Drive forward with negative Y (forward)
+          .withVelocityY(-driverLeftXLimited() * TotalMaxSpeed * Constants.SwerveConstants.SlowSpeed) // Drive left with negative X (left)
+          .withRotationalRate(-driverRightXLimited() * MaxAngularRate * Constants.SwerveConstants.SlowAngle) // Drive counterclockwise with negative X (left)
+          .withDeadband(Constants.SwerveConstants.deadband) // Add a deadband
+      ));
 
-        // When the right trigger on the driver xbox controller is pressed, drive robot oriented.
-        driverXbox.rightTrigger().whileTrue(drivetrain.applyRequest(() ->
-        driveRobot.withVelocityX(-driverLeftYLimited() * TotalMaxSpeed) // Drive forward with negative Y (forward)
-            .withVelocityY(-driverLeftXLimited() * TotalMaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-driverRightXLimited() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-            .withDeadband(Constants.SwerveConstants.deadband) // Add a deadband
-        ));
+      // When the right trigger on the driver xbox controller is pressed, drive robot oriented.
+      driverXbox.rightTrigger().whileTrue(drivetrain.applyRequest(() ->
+      driveRobot.withVelocityX(-driverLeftYLimited() * TotalMaxSpeed) // Drive forward with negative Y (forward)
+          .withVelocityY(-driverLeftXLimited() * TotalMaxSpeed) // Drive left with negative X (left)
+          .withRotationalRate(-driverRightXLimited() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+          .withDeadband(Constants.SwerveConstants.deadband) // Add a deadband
+      ));
 
-        // Switch to robot oriented mode when the trigger on the joystick is pressed.
-        driverJoystick.button(1).whileTrue(drivetrain.applyRequest(() ->
-        driveRobot.withVelocityX(-joystickYLimited() * TotalMaxSpeed) // Drive forward with negative Y (forward)
-            .withVelocityY(-joystickXLimited() * TotalMaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-joystickTLimited() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-            .withDeadband(Constants.SwerveConstants.deadband) // Add a deadband
-        ));
+      // Switch to robot oriented mode when the trigger on the joystick is pressed.
+      driverJoystick.button(1).whileTrue(drivetrain.applyRequest(() ->
+      driveRobot.withVelocityX(-joystickYLimited() * TotalMaxSpeed) // Drive forward with negative Y (forward)
+          .withVelocityY(-joystickXLimited() * TotalMaxSpeed) // Drive left with negative X (left)
+          .withRotationalRate(-joystickTLimited() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+          .withDeadband(Constants.SwerveConstants.deadband) // Add a deadband
+      ));
 
-        // Brake when button L1 on the joystick is pressed.
-        driverJoystick.button(2).whileTrue(drivetrain.applyRequest(() -> brake));
+      // Brake when button L1 on the joystick is pressed.
+      driverJoystick.button(2).whileTrue(drivetrain.applyRequest(() -> brake));
 
-        // Reset the field centric orientation when button L3 on the joystick is pressed
-        driverJoystick.button(4).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+      // Reset the field centric orientation when button L3 on the joystick is pressed
+      driverJoystick.button(4).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        driverJoystick.button(1).whileTrue(drivetrain.applyRequest(() ->
-        driveRobot.withVelocityX(getAutoAimX()).withVelocityY(getAutoAimY()).withRotationalRate(getAutoAimAngle())
-        ));
+      // Auto aim when trigger pressed
+      driverJoystick.button(1).whileTrue(drivetrain.applyRequest(() ->
+      driveRobotAuto.withVelocityX(getAutoAimX()).withVelocityY(getAutoAimY()).withRotationalRate(getAutoAimAngle())
+      ));
 
-        // reset the field-centric heading on y button press
-        driverXbox.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+      driverXbox.a().whileTrue(drivetrain.applyRequest(() ->
+      driveRobotAuto.withVelocityX(getAutoAimX()).withVelocityY(getAutoAimY()).withRotationalRate(getAutoAimAngle())
+      ));
 
-        drivetrain.registerTelemetry(logger::telemeterize);
+      driverXbox.x().whileTrue(drivetrain.applyRequest(()-> brake));
 
-        boolean isComp = false;
+      driverXbox.b().whileTrue(drivetrain.applyRequest(() ->
+      driveRobotAuto.withRotationalRate(SmartDashboard.getNumber("Turn Speed", 0)).withDeadband(0)
+      ));
 
-        autoChooser = AutoBuilder.buildAutoChooserWithOptionsModifier(
-          (stream) -> isComp
-          ? stream.filter(auto -> auto.getName().contains("comp"))
-          : stream
-        );
 
-        // NamedCommands.registerCommand("L1", new L1(elevator));
-        // NamedCommands.registerCommand("L2", new L2(elevator));
-        // NamedCommands.registerCommand("L3", new L3(elevator));
-        // NamedCommands.registerCommand("L4", new L4(elevator));
-        // NamedCommands.registerCommand("ReturnZero", new ReturnZero(elevator));
-        // NamedCommands.registerCommand("Climb", new Climb(climber));
+      // reset the field-centric heading on y button press
+      driverXbox.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        // autoChooser = AutoBuilder.buildAutoChooser("None");
-        autoChooser.setDefaultOption("Testing", new AutoManipulate(manipulate, 60));
-        autoChooser.addOption("TestAuto", new TestAuto(manipulate, elevator));
-        autoChooser.addOption("Elevator Control", new ElevatorControl(elevator));
-        autoChooser.addOption("Move Forward 3", (Command)(CommandSwerveDrivetrain.followPath("New Forward")));
-        // autoChooser.addOption("Move Forward 2", new FollowPath("NEw Forward"));
-        SmartDashboard.putData("Auto Chooser", autoChooser);
+      drivetrain.registerTelemetry(logger::telemeterize);
+
+      boolean isComp = false;
+
+      autoChooser = AutoBuilder.buildAutoChooserWithOptionsModifier(
+        (stream) -> isComp
+        ? stream.filter(auto -> auto.getName().contains("comp"))
+        : stream
+      );
+
+      // NamedCommands.registerCommand("L1", new L1(elevator));
+      // NamedCommands.registerCommand("L2", new L2(elevator));
+      // NamedCommands.registerCommand("L3", new L3(elevator));
+      // NamedCommands.registerCommand("L4", new L4(elevator));
+      // NamedCommands.registerCommand("ReturnZero", new ReturnZero(elevator));
+      // NamedCommands.registerCommand("Climb", new Climb(climber));
+
+      // autoChooser = AutoBuilder.buildAutoChooser("None");
+      autoChooser.setDefaultOption("Testing", new AutoManipulate(manipulate, 60));
+      autoChooser.addOption("TestAuto", new TestAuto(manipulate, elevator));
+      autoChooser.addOption("Elevator Control", new ElevatorControl(elevator));
+      autoChooser.addOption("Move Forward 3", (Command)(CommandSwerveDrivetrain.followPath("New Forward")));
+      // autoChooser.addOption("Move Forward 2", new FollowPath("NEw Forward"));
+      SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
     public Command getAutonomousCommand() {
