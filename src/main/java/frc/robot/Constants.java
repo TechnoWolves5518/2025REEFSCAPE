@@ -6,8 +6,38 @@ import org.json.simple.parser.ParseException;
 
 import com.pathplanner.lib.config.RobotConfig;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.units.Units;
+
+
 public class Constants {
-    
+    public static class VisionC {
+        public static final String frontLeftCamera = "AprilCamFL";
+        public static final String frontRightCamera = "AprilCamFR";
+        public static final String rearLeftCamera = "AprilCamRL";
+        public static final String rearRightCamera = "AprilCamRR";
+    }
+    public static class VisionSystem {
+        public static final Transform3d kRobotToCam =
+                new Transform3d(new Translation3d(Units.Meters.convertFrom(14, Units.Inches), Units.Meters.convertFrom((21.125/2), Units.Inches), Units.Meters.convertFrom(7, Units.Inches)), new Rotation3d(0, 0, 0));
+
+        // The layout of the AprilTags on the field
+        public static final AprilTagFieldLayout kTagLayout =
+                AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
+
+        // The standard deviations of our vision estimated poses, which affect correction rate
+        // (Fake values. Experiment and determine estimation noise on an actual robot.)
+        public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
+        public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+    }
     public class SwerveConstants {
         public static RobotConfig config;
         static {

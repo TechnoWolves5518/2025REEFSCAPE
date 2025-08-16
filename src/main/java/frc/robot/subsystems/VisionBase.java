@@ -14,7 +14,7 @@ import org.photonvision.targeting.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.math.geometry.*;
 
-public class Vision extends SubsystemBase {
+public class VisionBase extends SubsystemBase {
   /** Creates a new Vision. */
   private PhotonCamera aprilCam;
   private PhotonTrackedTarget trackedTag;
@@ -31,7 +31,7 @@ public class Vision extends SubsystemBase {
   
   
 
-  public Vision(int TagID) {
+  public VisionBase(int TagID) {
     aprilCam = new PhotonCamera("aprilCam");
     if(!aprilCam.isConnected()) {
       DriverStation.reportWarning("AprilTag Camera Missing", false);

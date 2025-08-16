@@ -25,8 +25,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.math.controller.*;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.math.geometry.Pose2d;
+
+
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.Climb;
+import frc.robot.Constants.VisionC;
 import frc.robot.commands.Manipulate;
 import frc.robot.commands.ReverseClimb;
 import frc.robot.commands.ReverseManipulate;
@@ -47,13 +52,14 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Manipulator;
-import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.VisionBase;
+import frc.robot.Vision;
 
 public class RobotContainer {
   private final Elevator elevator = new Elevator();
   private final Climber climber = new Climber();
   private final Manipulator manipulate = new Manipulator();
-  public final Vision vision = new Vision(1);
+  public final VisionBase visionBase = new VisionBase(1);
   private SendableChooser<Command> autoChooser;
   private double speedMultiplier = 1;
   private double angleMultiplier = 1;
@@ -121,8 +127,8 @@ public class RobotContainer {
     }
 
     double getAutoAimAngle() {
-      if(vision.isVisible()) {
-        double yaw = vision.getYaw();
+      if(visionBase.isVisible()) {
+        double yaw = visionBase.getYaw();
         double pidFilter = autoAimPID.calculate(yaw, 0);
         SmartDashboard.putNumber("AA Angle", pidFilter);
         return pidFilter;
@@ -133,8 +139,8 @@ public class RobotContainer {
     }
 
     double getAutoAimX() {
-      if(vision.isVisible()) {
-        double x = vision.getTranslateX();
+      if(visionBase.isVisible()) {
+        double x = visionBase.getTranslateX();
         double pidFilter = XAutoAimPID.calculate(x, 0);
         SmartDashboard.putNumber("AA X", pidFilter);
         return pidFilter;
@@ -145,8 +151,8 @@ public class RobotContainer {
     }
 
     double getAutoAimY() {
-      if(vision.isVisible()) {
-        double y = vision.getTranslateY();
+      if(visionBase.isVisible()) {
+        double y = visionBase.getTranslateY();
         double pidFilter = YAutoAimPID.calculate(y,10);
         SmartDashboard.putNumber("AA Y", pidFilter);
         return pidFilter;
@@ -157,6 +163,9 @@ public class RobotContainer {
     }
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    public final Vision VisionFL = new Vision(drivetrain::addVisionMeasurement, VisionC.frontLeftCamera);
+    public final Field2d field = new Field2d();
+
 
     public RobotContainer() {
         configureBindings();
@@ -185,6 +194,12 @@ public class RobotContainer {
               .withDeadband(Constants.SwerveConstants.deadband) // Add a deadband
           )
       );}
+    }
+
+    public void systemPeriodic() {
+      VisionFL.periodic();
+      field.setRobotPose(drivetrain.getState().Pose);
+      SmartDashboard.putData("Field", field);
     }
 
     private void configureBindings() {
