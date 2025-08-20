@@ -52,14 +52,12 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Manipulator;
-import frc.robot.subsystems.VisionBase;
 import frc.robot.Vision;
 
 public class RobotContainer {
   private final Elevator elevator = new Elevator();
   private final Climber climber = new Climber();
   private final Manipulator manipulate = new Manipulator();
-  public final VisionBase visionBase = new VisionBase(1);
   private SendableChooser<Command> autoChooser;
   private double speedMultiplier = 1;
   private double angleMultiplier = 1;
@@ -124,42 +122,6 @@ public class RobotContainer {
     double joystickTLimited() {
       driverJoystick.setTwistChannel(5);
       return joystickZLimiter.calculate(driverJoystick.getTwist() * -driverJoystick.getZ());
-    }
-
-    double getAutoAimAngle() {
-      if(visionBase.isVisible()) {
-        double yaw = visionBase.getYaw();
-        double pidFilter = autoAimPID.calculate(yaw, 0);
-        SmartDashboard.putNumber("AA Angle", pidFilter);
-        return pidFilter;
-      }
-      else {
-        return 0;
-      }
-    }
-
-    double getAutoAimX() {
-      if(visionBase.isVisible()) {
-        double x = visionBase.getTranslateX();
-        double pidFilter = XAutoAimPID.calculate(x, 0);
-        SmartDashboard.putNumber("AA X", pidFilter);
-        return pidFilter;
-      }
-      else {
-        return 0;
-      }
-    }
-
-    double getAutoAimY() {
-      if(visionBase.isVisible()) {
-        double y = visionBase.getTranslateY();
-        double pidFilter = YAutoAimPID.calculate(y,10);
-        SmartDashboard.putNumber("AA Y", pidFilter);
-        return pidFilter;
-      }
-      else {
-        return 0;
-      }
     }
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -260,14 +222,6 @@ public class RobotContainer {
       // Reset the field centric orientation when button L3 on the joystick is pressed
       driverJoystick.button(4).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-      // Auto aim when trigger pressed
-      driverJoystick.button(1).whileTrue(drivetrain.applyRequest(() ->
-      driveRobotAuto.withVelocityX(getAutoAimX()).withVelocityY(getAutoAimY()).withRotationalRate(getAutoAimAngle())
-      ));
-
-      driverXbox.a().whileTrue(drivetrain.applyRequest(() ->
-      driveRobotAuto.withVelocityX(getAutoAimX()).withVelocityY(getAutoAimY()).withRotationalRate(getAutoAimAngle())
-      ));
 
       driverXbox.x().whileTrue(drivetrain.applyRequest(()-> brake));
 
