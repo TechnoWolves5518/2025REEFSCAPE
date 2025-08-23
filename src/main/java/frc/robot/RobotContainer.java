@@ -232,6 +232,7 @@ public class RobotContainer {
 
       // reset the field-centric heading on y button press
       driverXbox.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+      // driverXbox.a().onTrue(drivetrain.pathFindThenFollowPath("pathMAIN"));
 
       drivetrain.registerTelemetry(logger::telemeterize);
 
