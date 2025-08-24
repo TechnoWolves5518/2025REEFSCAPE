@@ -165,6 +165,7 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+      SmartDashboard.putString("TargetLocation", "NONE");
       autoAimPID.enableContinuousInput(-180, 180);
       // Note that X is defined as forward according to WPILib convention,
       // and Y is defined as to the left according to WPILib convention.
@@ -222,6 +223,9 @@ public class RobotContainer {
       // Reset the field centric orientation when button L3 on the joystick is pressed
       driverJoystick.button(4).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
+      driverJoystick.button(7).onTrue(drivetrain.pathFindThenFollowPath("17R"));
+      driverJoystick.button(8).onTrue(drivetrain.pathFindThenFollowPath("17L"));
+
 
       driverXbox.x().whileTrue(drivetrain.applyRequest(()-> brake));
 
@@ -237,6 +241,8 @@ public class RobotContainer {
       drivetrain.registerTelemetry(logger::telemeterize);
 
       boolean isComp = false;
+
+
 
       autoChooser = AutoBuilder.buildAutoChooserWithOptionsModifier(
         (stream) -> isComp

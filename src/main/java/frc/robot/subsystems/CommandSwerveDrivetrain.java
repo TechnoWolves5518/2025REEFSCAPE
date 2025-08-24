@@ -364,6 +364,23 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
     }
 
+    public Command pathFindThenFollowPath(Supplier<String> pathSupplier) {
+        try{
+            // Load the path you want to follow using its name in the GUI
+            PathPlannerPath path = PathPlannerPath.fromPathFile(pathSupplier.get());
+            
+            PathConstraints constraints = new PathConstraints(
+            3.0, 4.0, 
+            Radians.convertFrom(540, Degrees), Radians.convertFrom(720, Degrees));
+
+            // Create a path following command using AutoBuilder. This will also trigger event markers.
+            return AutoBuilder.pathfindThenFollowPath(path, constraints);
+        } catch (Exception e) {
+            DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
+            return Commands.none();
+        }
+    }
+
 //   public Command followPathCommand(String pathName) {
 //     try{
 //         PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
