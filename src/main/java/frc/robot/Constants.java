@@ -27,7 +27,7 @@ public class Constants {
     }
     public static class VisionSystem {
         public static final Transform3d kRobotToCam =
-                new Transform3d(new Translation3d(Units.Meters.convertFrom(14, Units.Inches), Units.Meters.convertFrom((21.125/2), Units.Inches), Units.Meters.convertFrom(7, Units.Inches)), new Rotation3d(0, 0, 0));
+                new Transform3d(new Translation3d(Units.Meters.convertFrom(Units.Millimeters.convertFrom(15, Units.Inches) - 100, Units.Millimeters), Units.Meters.convertFrom((Units.Millimeters.convertFrom(15, Units.Inches) - 90), Units.Millimeters), Units.Meters.convertFrom(177, Units.Millimeters)), new Rotation3d(0, 0, Units.Radians.convertFrom(-33.3, Units.Degrees)));
 
         // The layout of the AprilTags on the field
         public static final AprilTagFieldLayout kTagLayout =
